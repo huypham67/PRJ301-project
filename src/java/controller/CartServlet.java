@@ -13,9 +13,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Cart;
+import model.Category;
 
 /**
  *
@@ -58,6 +60,10 @@ public class CartServlet extends HttpServlet {
         double total = dao.getTotalCartPrice(cart);
         request.setAttribute("total", total);
         request.setAttribute("cart", cart.getCartList());
+        
+        List<Category> listC = dao.getAllCategories();
+        request.setAttribute("listC", listC);
+        
         request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
 

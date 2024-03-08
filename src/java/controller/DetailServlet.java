@@ -39,6 +39,8 @@ public class DetailServlet extends HttpServlet {
         Course c = dao.getCourseById(id);
         List<Category> listC = dao.getAllCategories();
         Course lastP = dao.getLastestCourse();
+        Course mostOrderP = dao.getMostOrderCourse();
+        request.setAttribute("mostOrderP", mostOrderP);
         request.setAttribute("listC", listC);
         request.setAttribute("lastP", lastP);
         request.setAttribute("c", c);

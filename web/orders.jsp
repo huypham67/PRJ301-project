@@ -22,6 +22,7 @@
             <table class="table table-light">
                 <thead>
                     <tr>
+                        <th scope="col">Transaction Code</th>
                         <th scope="col">Date</th>
                         <th scope="col">Name</th>
                         <th scope="col">Category</th>
@@ -31,15 +32,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach begin="1" end="5" var="o">
-                    <tr>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>25</td>
-                        <td><a class="btn btn-sm btn-danger" href="cancel-order?id=1">Cancel Order</a></td>
-                    </tr>
+                    <c:forEach items="${transactionList}" var="t">
+                        <c:forEach items="${t.listOrders}" var="o">
+                            <tr>
+                                <td>${t.transactionId}</td>
+                                <td>${t.date}</td>
+                                <td>${o.course.name}</td>
+                                <td>${o.course.cname}</td>
+                                <td>${o.quantity}</td>
+                                <td>${o.course.price*o.quantity}</td>
+                                <td><a class="btn btn-sm btn-danger" href="cancel-order?tid=${t.transactionId}&pid=${o.course.id}">Cancel Order</a></td>
+                            </tr>
+                        </c:forEach>
                     </c:forEach>
 
                 </tbody>

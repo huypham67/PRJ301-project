@@ -13,19 +13,24 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.PageContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Cart;
-import model.Category;
 import model.Course;
+import model.Order;
+import model.Transaction;
+import model.User;
 
 /**
  *
  * @author huypd
  */
-@WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
-public class HomeServlet extends HttpServlet {
+@WebServlet(name = "OrderNowServlet", urlPatterns = {"/order-now"})
+public class OrderNowServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,7 +45,6 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         DAO dao = DAO.getInstance();
-        
         Cart cart = new Cart();
         Cookie[] arr = request.getCookies();
         if (arr != null) {
@@ -54,21 +58,31 @@ public class HomeServlet extends HttpServlet {
                 }
             }
         }
-        
-        List<Course> listP = dao.getAllCourses();
-        List<Category> listC = dao.getAllCategories();
-        Course lastP = dao.getLastestCourse();
-        Course mostOrderP = dao.getMostOrderCourse();
-        request.setAttribute("mostOrderP", mostOrderP);
-        request.setAttribute("listP", listP);
-        request.setAttribute("listC", listC);
-        request.setAttribute("lastP", lastP);
-        
-        Cookie sizeC = new Cookie("sizeC", String.valueOf(cart.getCartList().size()));
-        sizeC.setMaxAge(60 * 60 * 24 * 7);
-        response.addCookie(sizeC);
 
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        String id = request.getParameter("id");
+        String quantityS = request.getParameter("quantity");
+        int quantity = Integer.parseInt(quantityS);
+        Course course = dao.getCourseById(id);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("acc");
+        if (user != null) {
+            Order o = new Order(course, quantity);
+            dao.insertTransaction(o, user);
+            cart.removeCourseToCart(course);
+            
+            String txt = dao.encode(cart);
+            Cookie cartC = new Cookie("cartC", txt); //tạo lại cartC
+            cartC.setMaxAge(60 * 60 * 24 * 7);
+            response.addCookie(cartC);
+
+            Cookie sizeC = new Cookie("sizeC", String.valueOf(cart.getCartList().size()));
+            sizeC.setMaxAge(60 * 60 * 24 * 7);
+            response.addCookie(sizeC);
+
+            response.sendRedirect("orders");
+        } else {
+            response.sendRedirect("login.jsp");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

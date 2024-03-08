@@ -13,17 +13,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Order;
-import model.User;
 
 /**
  *
  * @author huypd
  */
-@WebServlet(name="ListOrderServlet", urlPatterns={"/orders"})
-public class ListOrderServlet extends HttpServlet {
+@WebServlet(name="CancelOrderServlet", urlPatterns={"/cancel-order"})
+public class CancelOrderServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +31,9 @@ public class ListOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String transactionId = request.getParameter("tid");
+        String courseId = request.getParameter("pid");
         DAO dao = DAO.getInstance();
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        List<Order> listO = dao.getUserOrder(user);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

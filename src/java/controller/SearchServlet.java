@@ -39,6 +39,8 @@ public class SearchServlet extends HttpServlet {
         List<Course> listP = dao.searchByName(txtS);
         List<Category> listC = dao.getAllCategories();
         Course lastP = dao.getLastestCourse();
+        Course mostOrderP = dao.getMostOrderCourse();
+        request.setAttribute("mostOrderP", mostOrderP);
         request.setAttribute("listP", listP);
         request.setAttribute("listC", listC);
         request.setAttribute("lastP", lastP);

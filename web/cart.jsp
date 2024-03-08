@@ -28,7 +28,7 @@
                     <fmt:formatNumber pattern="#.##" value="${total}"></fmt:formatNumber>
                 </h3> 
                 <a class="mx-3 btn btn-primary" href="cart-check-out">Check Out</a>
-                <h5 style='color: crimson; text-align: center'>...</h5>
+                <h5 style='color: crimson; text-align: center'>${mes}</h5>
             </div>
             <table class="table table-light">
                 <thead>
@@ -51,7 +51,7 @@
                                 </fmt:formatNumber></td>
                             <td>
                                 <form action="order-now" method="post" class="form-inline">
-                                    <input type="hidden" name="id" value="1" class="form-input">
+                                    <input type="hidden" name="id" value="${o.key.id}" class="form-input">
                                     <div class="form-group d-flex justify-content-between">
                                         <a class="btn bnt-sm btn-incre" href="quantity-inc-dec?action=inc&id=${o.key.id}"><i class="fas fa-plus-square"></i></a> 
                                         <input type="text" name="quantity" class="form-control"  value="${o.value}" readonly> 

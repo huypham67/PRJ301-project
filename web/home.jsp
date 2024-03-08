@@ -50,7 +50,7 @@
                                         </c:if>
                                         <div class="mt-3 d-flex justify-content-between">
                                             <a class="btn btn-dark" href="add-to-cart?id=${o.id}&quantity=1">Add to Cart</a> 
-                                            <a class="btn btn-danger" href="#">Buy Now</a>
+                                            <a class="btn btn-danger" href="order-now?id=${o.id}&quantity=1">Buy Now</a>
                                         </div>
                                     </div>
                                 </div>

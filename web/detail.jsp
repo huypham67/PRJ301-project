@@ -89,7 +89,7 @@
                                                 <dl class="param param-inline">
                                                     <dt>Quantity: </dt>
                                                     <dd>
-                                                        <select class="form-control form-control-sm" style="width:70px;">
+                                                        <select id="quantitySelect" class="form-control form-control-sm" style="width:70px;">
                                                             <option> 1 </option>
                                                             <option> 2 </option>
                                                             <option> 3 </option>
@@ -102,8 +102,8 @@
 
                                         </div> <!-- row.// -->
                                         <hr>
-                                        <a href="#" class="btn btn-lg btn-primary text-uppercase"> Buy now </a>
-                                        <a href="#" class="btn btn-lg btn-outline-primary text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a>
+                                        <a id="buy-now" href="order-now?id=${c.id}&quantity=1" class="btn btn-lg btn-primary text-uppercase"> Buy now </a>
+                                        <a id="add-to-cart" href="add-to-cart?id=${c.id}&quantity=1" class="btn btn-lg btn-outline-primary text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a>
                                     </article> <!-- card-body.// -->
                                 </aside> <!-- col.// -->
                             </div> <!-- row.// -->
@@ -116,4 +116,24 @@
         </div>
         <jsp:include page="/includes/footer.jsp"/>
     </body>
+    <script>
+        // Lấy thẻ select và thẻ a cần cập nhật href
+        var quantitySelect = document.getElementById('quantitySelect');
+        var buyNowLink = document.getElementById('buy-now');
+        var addToCartLink = document.getElementById('add-to-cart');
+        // Lắng nghe sự kiện onchange của select
+        quantitySelect.addEventListener('change', function () {
+            // Lấy giá trị số lượng đã chọn
+            const selectedQuantity = this.value;
+            // Lấy href hiện tại của thẻ a
+            var currentBuyNowHref = buyNowLink.getAttribute('href');
+            var currentAddToCartHref = addToCartLink.getAttribute('href');
+            // Tìm và thay thế giá trị số lượng trong href
+            currentBuyNowHref = currentBuyNowHref.replace(/quantity=\d+/, 'quantity=' + selectedQuantity);
+            currentAddToCartHref = currentAddToCartHref.replace(/quantity=\d+/, 'quantity=' + selectedQuantity);
+            // Cập nhật href mới cho cả hai thẻ a
+            buyNowLink.setAttribute('href', currentBuyNowHref);
+            addToCartLink.setAttribute('href', currentAddToCartHref);
+        });
+    </script>
 </html>
