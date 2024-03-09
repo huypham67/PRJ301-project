@@ -6,6 +6,7 @@
 package controller;
 
 import dao.DAO;
+import i18n.LanguageManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -22,30 +23,43 @@ import model.User;
  */
 @WebServlet(name="LoginServlet", urlPatterns={"/login"})
 public class LoginServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        DAO dao = DAO.getInstance();
-        User acc = dao.login(email, password);
-        if (acc == null) {
-            request.setAttribute("mes", "Email or password is wrong");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("acc", acc);
-            response.sendRedirect("home");
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    LanguageManager lang = new LanguageManager();
+    String langParam = null;
+    String previousURL = request.getHeader("referer");
+    if (previousURL != null) {
+        int langIndex = previousURL.lastIndexOf("?lang=");
+        if (langIndex != -1) {
+            langParam = previousURL.substring(langIndex + 6);
         }
-    } 
+    }
+
+    String jspFile, mes;
+    if ("vi".equals(langParam)) {
+        lang.setLanguage(request, "vi_VN");
+        jspFile = "loginVie.jsp";
+        mes = "Sai email hoặc mật khẩu";
+    } else {
+        lang.setLanguage(request, "en_US");
+        jspFile = "login.jsp";
+        mes = "Email or password is wrong";
+    }
+    response.setContentType("text/html;charset=UTF-8");
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+    DAO dao = DAO.getInstance();
+    User acc = dao.login(email, password);
+    if (acc == null) {
+        request.setAttribute("mes", mes);
+        request.getRequestDispatcher(jspFile).forward(request, response);
+    } else {
+        HttpSession session = request.getSession();
+        session.setAttribute("acc", acc);
+        response.sendRedirect("home");
+    }
+}
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 

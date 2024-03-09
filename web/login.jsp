@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : Mar 6, 2024, 3:26:34 PM
-    Author     : huypd
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -117,5 +111,9 @@
                 </div>
             </div>
         </div>
+        <div class="text-center">
+            <a href="loginVie.jsp?lang=vi">Vietnamese (Tiếng Việt)</a>
+        </div>
+                            
     </body>
 </html>

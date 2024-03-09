@@ -2,31 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="model.Course" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%
-    String currentLanguage = (String) session.getAttribute("language");
-    if (currentLanguage == null || !("vi_VN".equals(currentLanguage) || "en_US".equals(currentLanguage))) {
-        currentLanguage = "en_US"; // Thiết lập ngôn ngữ mặc định
-        session.setAttribute("language", currentLanguage); 
-    }
-%>
-<c:if test="${empty param.lang or param.lang == 'en'}">
-    <fmt:setLocale value="en_US"/>   
-    <style>
-            .btn {
-            font-size: 16px !important;
-        }
-    </style>
-</c:if>
-
-<c:if test="${param.lang == 'vi'}">
-    <fmt:setLocale value="vi_VN"/>
-    <style>
-            .btn {
-            font-size: 12px !important;
-        }
-    </style>
-</c:if>
-
+<%@include file="includes/language.jsp" %>
 <fmt:setBundle basename="i18n.language" var="langSet"/>
 <!DOCTYPE html>
 <html>
@@ -34,7 +10,6 @@
     <title><fmt:message key = "home.title" bundle = "${langSet}"/></title>
     <jsp:include page="/includes/header.jsp" />   
     <link rel="stylesheet" href="css/home.css"/>
- 
 </head>
 <body>
     <jsp:include page="/includes/navbar.jsp" />
