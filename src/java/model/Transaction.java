@@ -67,5 +67,4 @@ public class Transaction {
         return "Transaction{" + "transactionId=" + transactionId + ", listOrders=" + listOrders + ", uid=" + uid + ", date=" + date + ", totalPrice=" + totalPrice + '}';
     }
     
-    
 }

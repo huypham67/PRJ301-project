@@ -1,0 +1,12 @@
+.category_block {
+    display: none;
+}
+.popup {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 1000;
+}   
+

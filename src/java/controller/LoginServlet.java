@@ -33,12 +33,12 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
         DAO dao = DAO.getInstance();
-        User acc = dao.login(username, password);
+        User acc = dao.login(email, password);
         if (acc == null) {
-            request.setAttribute("mes", "Username or password is wrong");
+            request.setAttribute("mes", "Email or password is wrong");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             HttpSession session = request.getSession();

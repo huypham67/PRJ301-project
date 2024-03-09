@@ -60,12 +60,6 @@
                                         <div class="img-big-wrap">
                                             <div> <a href="#"><img src="${c.image}"></a></div>
                                         </div> <!-- slider-product.// -->
-                                        <div class="img-small-wrap">
-                                            <div class="item-gallery"> <img src="#"> </div>
-                                            <div class="item-gallery"> <img src="#"> </div>
-                                            <div class="item-gallery"> <img src="#"> </div>
-                                            <div class="item-gallery"> <img src="#"> </div>
-                                        </div> <!-- slider-nav.// -->
                                     </article> <!-- gallery-wrap .end// -->
                                 </aside>
                                 <aside class="col-sm-7">

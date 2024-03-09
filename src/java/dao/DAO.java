@@ -57,7 +57,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
                 list.add(c);
             }
         } catch (Exception e) {
@@ -81,7 +82,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
                 list.add(c);
             }
         } catch (Exception e) {
@@ -103,7 +105,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -132,7 +135,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -154,7 +158,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -179,14 +184,14 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public User login(String user, String pass) {
-        String sql = "select * from Users where username = ? and [password] = ?";
+        String sql = "select * from Users where email = ? and [password] = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user);
             ps.setString(2, pass);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4));
+                return new User(rs.getInt(1), rs.getString(5), rs.getString(6), rs.getInt(7));
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -209,7 +214,8 @@ public class DAO extends DBContext implements Serializable {
                         rs.getDouble(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getString(8));
+                        rs.getString(8),
+                        rs.getDouble(9));
                 list.add(c);
             }
         } catch (Exception e) {
@@ -223,12 +229,12 @@ public class DAO extends DBContext implements Serializable {
         for (Course o : cart.getCartList().keySet()) {
             int quantity = cart.getCartList().get(o);
             try {
-                String sql = "select price from Courses where id = ?";
+                String sql = "select price, discount from Courses where id = ?";
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setString(1, o.getId());
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
-                    s += rs.getDouble(1) * quantity;
+                    s += rs.getDouble(1) * quantity * (1 - rs.getDouble(2));
                 }
             } catch (Exception e) {
             }
@@ -252,13 +258,16 @@ public class DAO extends DBContext implements Serializable {
         return null;
     }
 
-    public void signUp(String user, String pass) {
+    public void signUp(String fullName, String address, String phoneNumber, String email, String pass) {
         String sql = "INSERT INTO Users\n"
-                + "VALUES (?, ?, 0)";
+                + "VALUES (?, ?, ?, ?, ?, 0)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, user);
-            ps.setString(2, pass);
+            ps.setString(1, fullName);
+            ps.setString(2, address);
+            ps.setString(3, phoneNumber);
+            ps.setString(4, email);
+            ps.setString(5, pass);
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
@@ -285,7 +294,7 @@ public class DAO extends DBContext implements Serializable {
         DAO dao = DAO.getInstance();
         List<Transaction> list = new ArrayList<>();
         String sql = "select * from Transactions"
-                + " where userid = ? order by [date] desc";
+                + " where userId = ? order by [date] desc";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, user.getId());
@@ -320,7 +329,7 @@ public class DAO extends DBContext implements Serializable {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String sql1 = "INSERT INTO [dbo].[Transactions]\n"
                 + "           ([id]\n"
-                + "           ,[userid]\n"
+                + "           ,[userId]\n"
                 + "           ,[date]\n"
                 + "           ,[totalPrice])\n"
                 + "     VALUES\n"
@@ -339,15 +348,15 @@ public class DAO extends DBContext implements Serializable {
                 + "           ([courseId]\n"
                 + "           ,[transactionId]\n"
                 + "           ,[quantity]\n"
-                + "           ,[totalPrice])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?)";
+                + "           ,[price])\n"
+                + "     VALUES\n" 
+                + "           (?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql2);
             ps.setString(1, o.getCourse().getId());
             ps.setString(2, transactionId);
             ps.setInt(3, o.getQuantity());
-            ps.setDouble(4, o.getCourse().getPrice() * o.getQuantity());
+            ps.setDouble(4, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
@@ -370,12 +379,7 @@ public class DAO extends DBContext implements Serializable {
 
     public static void main(String[] args) {
         DAO dao = DAO.getInstance();
-        User user = dao.login("huy", "123");
-        System.out.println(user);
-        List<Transaction> list = dao.getUserOrder(user);
-        for (Transaction transaction : list) {
-            System.out.println(transaction);
-        }
+        System.out.println(dao.login("huy@gmail.com", "123"));
     }
 
 }

@@ -12,7 +12,8 @@ import java.util.Objects;
  *
  * @author huypd
  */
-public class Course implements Serializable{
+public class Course implements Serializable {
+
     private String id;
     private String name;
     private String image;
@@ -21,10 +22,12 @@ public class Course implements Serializable{
     private String duration;
     private int cid;
     private String publicDate;
+    private double discount;
+
     public Course() {
     }
 
-    public Course(String id, String name, String image, String description, double price, String duration, int cid, String publicDate) {
+    public Course(String id, String name, String image, String description, double price, String duration, int cid, String publicDate, double discount) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -33,6 +36,7 @@ public class Course implements Serializable{
         this.duration = duration;
         this.cid = cid;
         this.publicDate = publicDate;
+        this.discount = discount;
     }
 
     public String getId() {
@@ -98,12 +102,20 @@ public class Course implements Serializable{
     public void setPublicDate(String publicDate) {
         this.publicDate = publicDate;
     }
-    
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
     public String getCname() {
         DAO dao = DAO.getInstance();
         return dao.getCategoryByCid(cid);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -112,6 +124,7 @@ public class Course implements Serializable{
         hash = 79 * hash + Objects.hashCode(this.image);
         hash = 79 * hash + Objects.hashCode(this.description);
         hash = 79 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
+        hash = 79 * hash + (int) (Double.doubleToLongBits(this.discount) ^ (Double.doubleToLongBits(this.discount) >>> 32));
         hash = 79 * hash + Objects.hashCode(this.duration);
         hash = 79 * hash + this.cid;
         hash = 79 * hash + Objects.hashCode(this.publicDate);
@@ -151,21 +164,20 @@ public class Course implements Serializable{
         if (!Objects.equals(this.publicDate, other.publicDate)) {
             return false;
         }
+        if (Double.doubleToLongBits(this.discount) != Double.doubleToLongBits(other.discount)) {
+            return false;
+        }
         return (this.cid == other.cid);
     }
 
-
     @Override
     public String toString() {
-        return "Course{" + "id=" + id + ", name=" + name + ", image=" + image + ", description=" + description + ", price=" + price + ", duration=" + duration + ", cid=" + cid + ", publicDate=" + publicDate + '}';
+        return "Course{" + "id=" + id + ", name=" + name + ", image=" + image + ", description=" + description + ", price=" + price + ", duration=" + duration + ", cid=" + cid + ", publicDate=" + publicDate + ", discount=" + discount + '}';
     }
+
     public static void main(String[] args) {
         Course c = new Course();
         c.setCid(1);
         System.out.println(c.getCname());
     }
-
-    
-
-    
 }

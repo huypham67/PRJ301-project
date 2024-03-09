@@ -57,7 +57,7 @@
                                     <p class="text-danger"> ${mes} </p>
                                     <form id="login-form" action="login" method="post" role="form" style="display: block;">
                                         <div class="form-group">
-                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                            <input type="text" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
@@ -85,10 +85,16 @@
                                     </form>
                                     <form id="register-form" action="sign-up" method="post" role="form" style="display: none;">
                                         <div class="form-group">
-                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                            <input type="text" name="fullName" id="fullName" tabindex="1" class="form-control" placeholder="Full Name" value="">
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                                            <input type="text" name="address" id="address" tabindex="1" class="form-control" placeholder="Address" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="phoneNumber" id="phoneNumber" tabindex="1" class="form-control" placeholder="Phone number" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
