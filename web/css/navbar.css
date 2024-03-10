@@ -14,6 +14,18 @@
     background-color: #f8f9fa;
 }
 
+.navbar {
+    background-color: #c3e6cb;
+    transition: top 0.3s;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0px;
+}
+.navbar.hidden {
+    top: 0px;
+}
+
 @media (min-width: 767px) {
     .navbar .dropdown-toggle:not(.nav-link)::after {
         display: inline-block;
@@ -26,4 +38,6 @@
         border-left: .3em solid;
     }
 }
+
+
 
