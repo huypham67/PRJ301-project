@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page import="model.Course" %>
 <%@include file="includes/language.jsp" %>
 <%@include file="includes/navbar.jsp" %>
@@ -8,14 +7,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Your cart Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-          crossorigin="anonymous">
     <link rel="stylesheet" href="css/cart.css" type="text/css"/>
+        <script>
+        function displayPopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = "block"; // Display the popup
+        }
+
+        function closePopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = "none"; // Hide the popup
+        }
+
+        function removeSelected() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            var ids = [];         
+            checkboxes.forEach(function (checkbox) {
+                ids.push(checkbox.value);
+            });
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "deleteSelected", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var params = "selectedIds=" + encodeURIComponent(ids.join(","));
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    alert("Deleted Successfully!");
+                    location.reload();
+                }
+            };
+            xhttp.send(params); 
+        }
+    </script>
 </head>
 <body>
     <div class="container my-3">
@@ -43,7 +66,7 @@
                     <th scope="col">Cancel</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody>              
                 <c:forEach items="${cart}" var="o">
                     <tr>
                         <td><input type="checkbox" value="${o.key.id}"/></td>
@@ -53,36 +76,11 @@
                         <td><jsp:getProperty name="course" property="cname"/></td>
                         <td>${o.key.discount}</td>
                         <td><fmt:formatNumber pattern="#.##" value="${o.key.price*o.value}"></fmt:formatNumber></td>
-                        <td><a href="#" onclick="removeById('${o.key.id}')" class="btn btn-sm btn-danger">Remove</a></td>
+                        <td><a href="remove-from-cart?id=${o.key.id}" class="btn btn-sm btn-danger">Remove</a></td>
                     </tr>
                 </c:forEach>
             </tbody>
         </table>
     </div>
-    <script>
-        function displayPopup() {
-            var popup = document.getElementById("popup");
-            popup.style.display = "block"; // Display the popup
-        }
-
-        function closePopup() {
-            var popup = document.getElementById("popup");
-            popup.style.display = "none"; // Hide the popup
-        }
-
-        function removeSelected() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            var ids = [];
-            checkboxes.forEach(function (checkbox) {
-                ids.push(checkbox.value);
-            });
-            removeById(ids);
-        }
-
-        function removeById(ids) {
-            // Gửi yêu cầu xóa các id đến máy chủ, ví dụ sử dụng Ajax
-            // Đoạn mã Ajax để gửi yêu cầu xóa các id cụ thể
-        }
-    </script>
 </body>
 </html>

@@ -54,7 +54,7 @@ public class RemoveFromCartServlet extends HttpServlet {
         if (id != null) {
             cart.removeCourseToCart(course);
         }
-        Cookie cartC = new Cookie("cartC", dao.encode(cart)); //tạo lại cartC
+        Cookie cartC = new Cookie("cartC", dao.encode(cart));
         cartC.setMaxAge(60 * 60 * 24 * 7);
         response.addCookie(cartC);
 
