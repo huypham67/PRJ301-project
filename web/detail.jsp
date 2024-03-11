@@ -112,11 +112,11 @@
     </body>
     <script>
         // Lấy thẻ select và thẻ a cần cập nhật href
-        var quantitySelect = document.getElementById('quantitySelect');
+        var quantityInput = document.getElementById('quantitySelect');
         var buyNowLink = document.getElementById('buy-now');
         var addToCartLink = document.getElementById('add-to-cart');
         // Lắng nghe sự kiện onchange của select
-        quantitySelect.addEventListener('change', function () {
+        quantityInput.addEventListener('change', function () {
             // Lấy giá trị số lượng đã chọn
             const selectedQuantity = this.value;
             // Lấy href hiện tại của thẻ a

@@ -273,6 +273,61 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
     }
+    
+    public void addCourse(Course course){
+        String sql = "INSERT [dbo].[Courses] ([id], [name], [image], [description], [price], [duration], [cid], [publicDate]) VALUES (?, ?, ?, ?, ?, ?, ?, CAST(? AS DateTime))";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, course.getId());
+            ps.setString(2, course.getName());
+            ps.setString(3, course.getImage());
+            ps.setString(4, course.getDescription());
+            ps.setDouble(5, course.getPrice());
+            ps.setString(6, course.getDuration());
+            ps.setInt(7, course.getCid());
+            ps.setString(8, course.getPublicDate());
+            ResultSet rs = ps.executeQuery();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+   
+    public void deleteCourseById(String id){
+         String sql = "DELETE Courses where id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    public void updateCourse(Course course){
+         String sql = " UPDATE [dbo].[Courses]\n" +
+            "SET [name] = ?,\n" +
+            "    [image] = ?,\n" +
+            "    [description] = ?,\n" +
+            "    [price] = ?,\n" +
+            "    [duration] = ?,\n" +
+            "    [cid] = ?,\n" +
+            "    [publicDate] = CAST(? AS DateTime)\n" +
+            "WHERE [id] = ?;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);          
+            ps.setString(1, course.getName());
+            ps.setString(2, course.getImage());
+            ps.setString(3, course.getDescription());
+            ps.setDouble(4, course.getPrice());
+            ps.setString(5, course.getDuration());
+            ps.setInt(6, course.getCid());
+            ps.setString(7, course.getPublicDate());
+            ps.setString(8, course.getId());
+            ResultSet rs = ps.executeQuery();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     //xử lý dữ liệu từ cookie
     public String encode(Cart cart) throws IOException {

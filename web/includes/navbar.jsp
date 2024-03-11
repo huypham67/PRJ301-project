@@ -59,7 +59,7 @@
                             <a class="nav-link dropdown-toggle" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><fmt:message key="navbar.account" bundle="${langSet}"/></a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown1"> 
                                 <c:if test="${sessionScope.acc.isAdmin == 1}">
-                                    <li class="dropdown-item"><a href="managerProduct.jsp"><fmt:message key="navbar.manageProduct" bundle="${langSet}"/></a></li>
+                                    <li class="dropdown-item"><a href="manager"><fmt:message key="navbar.manageProduct" bundle="${langSet}"/></a></li>
                                 </c:if>
                                 <li class="dropdown-item" href="#"><a href="orders"><fmt:message key="navbar.orders" bundle="${langSet}"/></a></li>
                                 <li class="dropdown-item" href="#"><a href="logout"><fmt:message key="navbar.logout" bundle="${langSet}"/></a></li>

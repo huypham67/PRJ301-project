@@ -17,7 +17,7 @@ public class DeleteCheckboxServlet extends HttpServlet {
         
         // Gọi hàm xóa các mục dựa trên id
         DAO dao = DAO.getInstance();
-        dao.removeItems(selectedIds);
+        //dao.removeItems(selectedIds);
         
         // Redirect hoặc gửi phản hồi tùy thuộc vào nhu cầu của ứng dụng
     }
