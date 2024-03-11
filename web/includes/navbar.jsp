@@ -3,7 +3,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <%@include file="/includes/language.jsp"%>
-<<link rel="stylesheet" href="css/navbar.css"/>
+<link rel="stylesheet" href="css/navbar.css"/>
 <script src="script/language.js"></script>
 <div class="navbar navbar-expand-md navbar-dark bg-dark mb-4" style="margin-bottom: 0px !important;" role="navigation">
     <a class="navbar-brand" href="home"><fmt:message key="navbar.company" bundle="${langSet}"/></a>
@@ -77,9 +77,9 @@
             $(window).scroll(function() {
                 var currentScrollPos = window.pageYOffset;
                 if (prevScrollpos > currentScrollPos || currentScrollPos === 0) {
-                    $(".navbar").removeClass("hidden"); // Hi?n th? navbar khi ng??i dùng cu?n lên trên cùng ho?c trang ???c t?i lên
+                    $(".navbar").removeClass("hidden");
                 } else {
-                    $(".navbar").addClass("hidden"); // ?n navbar khi ng??i dùng cu?n xu?ng
+                    $(".navbar").addClass("hidden"); 
                 }
                 prevScrollpos = currentScrollPos;
             });

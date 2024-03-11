@@ -1,3 +1,10 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.Course" %>
+<%@include file="includes/language.jsp" %>
+<%@include file="includes/navbar.jsp" %>
+        
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,18 +13,12 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-        <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="css/cart.css" type="text/css"/>
     </head>
     <body>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-        <%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <%@ page import="model.Course" %>
-
-        <jsp:include page="/includes/navbar.jsp"/>
-
+        <div style="padding-top: 20px">
         <!-- Checkout Popup -->
+        
         <div id="popup" class="popup">
             <div>
                 <div class="popup-content">
@@ -115,5 +116,6 @@
                 popup.style.display = "none"; // Hide the popup
             }
         </script>
+        </div>
     </body>
 </html>

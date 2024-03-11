@@ -32,7 +32,6 @@
     <div class="container">
         <div class="row">
             <jsp:include page="/includes/left.jsp"/>
-
             <div class="col-sm-9">
                 <div id="content" class="row">
                     <c:forEach items="${listP}" var="o">
