@@ -14,7 +14,6 @@
 <body>
     <jsp:include page="/includes/navbar.jsp" />
     <div id="bannerHome"><jsp:include page="/includes/banner.jsp"/></div>
-    
     <div class="container">
         <div class="row">
             <div class="col">

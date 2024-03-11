@@ -4,7 +4,7 @@
 <%@ page import="model.Course" %>
 <%@include file="includes/language.jsp" %>
 <%@include file="includes/navbar.jsp" %>
-        
+<%@include file="includes/header.jsp" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,48 +14,9 @@
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link rel="stylesheet" href="css/cart.css" type="text/css"/>
+        
     </head>
     <body>
-        <div style="padding-top: 20px">
-        <!-- Checkout Popup -->
-        
-        <div id="popup" class="popup">
-            <div>
-                <div class="popup-content">
-                    <!-- Form for input fields -->
-                    <form id="checkoutForm" action="cart-check-out" method="post"> 
-                        <div>						
-                            <h4>Checkout</h4>
-                            <button type="button" onclick="closePopup()" class="close-btn" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div>
-                            <div class="form-group">
-                                <label for="name">Full Name:</label><br>
-                                <input type="text" id="name" name="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number:</label><br>
-                                <input type="text" id="phone" name="phone">
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address:</label><br>
-                                <input type="text" id="address" name="address">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label><br>
-                                <input type="email" id="email" name="email">
-                            </div>
-                            <div>
-                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                <input type="submit" class="btn btn-success" value="SEND/CHECKOUT">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
         <div class="container my-3">
             <div class="d-flex py-3">
                 <h3>Total Price: $
@@ -103,8 +64,7 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Script to control popup display -->
+            
         <script>
             function displayPopup() {
                 var popup = document.getElementById("popup");
@@ -116,6 +76,5 @@
                 popup.style.display = "none"; // Hide the popup
             }
         </script>
-        </div>
     </body>
 </html>
