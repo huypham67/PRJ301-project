@@ -1,57 +1,3 @@
-/* CSS for the popup */
-.popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
-    z-index: 9999; /* ensure it's on top */
-}
-
-.popup-content {
-    background-color: white;
-    width: 80%; /* Thay đổi độ rộng thành 80% của trình duyệt */
-    max-width: 500px; /* Giảm chiều rộng tối đa xuống một chút */
-    margin: 100px auto; /* center the popup vertically and horizontally */
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* drop shadow */
-}
-
-/* CSS for form input fields */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="email"] {
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    width: 100%;
-}
-
-input[type="submit"] {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
 .popup-content {
     position: relative;
 }
@@ -73,4 +19,54 @@ input[type="submit"]:hover {
     border: 1px solid #333;
     border-radius: 50%;
     padding: 5px;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    z-index: 1000; 
+}
+
+/* Styling for confirmation popup */
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.popup-content button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#confirmBtn {
+    background-color: #dc3545; 
+    color: white;
+}
+
+#cancelBtn {
+    background-color: #007bff; 
+    color: white;
 }
