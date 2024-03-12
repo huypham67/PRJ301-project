@@ -44,10 +44,10 @@ public class BuyCheckboxServlet extends HttpServlet {
                     Course course = dao.getCourseById(id);
                     selectedCourses.add(course);
                 }
-                
+                request.setAttribute("mes", "Ready!Go to Checkout....");
                 request.setAttribute("selectedCourses", selectedCourses);
+                response.sendRedirect("checkout.jsp");
             }
-            response.sendRedirect("checkout.jsp");
         } else {
             request.setAttribute("mes", "Have some error for checkout for you. Plese contact with Fanpage.");
             response.sendRedirect("cart.jsp");
