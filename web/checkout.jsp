@@ -1,22 +1,17 @@
-<%-- 
-    Document   : checkout
-    Created on : Mar 6, 2024, 11:48:11 PM
-    Author     : huypd
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Check out page</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        <!--<link rel="stylesheet" href="/css/checkout.css"/>-->
         <jsp:include page="includes/header.jsp"/>
+        <jsp:include page="includes/navbar.jsp"/>
     </head>
     <body>
-        <div class="container">
+        
+        <jsp:include page="includes/formInfo.jsp"/>
+        
+        <div style="padding-top: 80px" class="container">
             <div class="row">
                 <div class="col-xl-8">
                     <div class="card border shadow-none">
@@ -295,6 +290,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
             <!-- end row -->
 

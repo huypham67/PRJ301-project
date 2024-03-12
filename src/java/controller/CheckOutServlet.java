@@ -57,7 +57,7 @@ public class CheckOutServlet extends HttpServlet {
                     }
                 }
             }
-            if (cart.getCartList().size() != 0) {
+            if (!cart.getCartList().isEmpty()) {
                 for (Course c : cart.getCartList().keySet()) {
                     Order o = new Order(c, cart.getCartList().get(c));
                     dao.insertTransaction(o, user);
@@ -73,7 +73,7 @@ public class CheckOutServlet extends HttpServlet {
                 
                 response.sendRedirect("orders");
             } else {
-                request.setAttribute("mes", "There is no items in your cart. We can't checkout for you.");
+                request.setAttribute("mes", "There is no items. We can't checkout for you.");
                 request.getRequestDispatcher("cart.jsp").forward(request, response);
             }
         }
