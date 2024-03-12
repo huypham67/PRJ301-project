@@ -9,58 +9,6 @@
     <title>Your cart Page</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/cart.css" type="text/css"/>
-    <style>
-        .fixed-bottom {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px;
-            background-color: #fff;
-            border-top: 1px solid #ccc;
-            z-index: 1000; 
-        }
-
-        /* Styling for confirmation popup */
-        .popup {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .popup-content {
-            background-color: #fefefe;
-            margin: 20% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        /* Styling for buttons inside the popup */
-        .popup-content button {
-            margin: 5px;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        #confirmBtn {
-            background-color: #dc3545; /* Red color */
-            color: white;
-        }
-
-        #cancelBtn {
-            background-color: #007bff; /* Blue color */
-            color: white;
-        }
-    </style>
 </head>
 <body>
     <%@include file="includes/navbar.jsp" %>
@@ -135,8 +83,21 @@
             }
 
             showConfirmationPopup("Are you sure you want to buy the selected items?", function() {
-                // Code to handle buying selected items
-                alert("Buying selected items...Go to checkout");
+                var ids = [];         
+                checkboxes.forEach(function (checkbox) {
+                    ids.push(checkbox.value);
+                });
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "buyCheckbox", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                var params = "selectedIds=" + encodeURIComponent(ids.join(","));
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        alert("Thank you! Here we go to checkout!");
+                        window.location.href = "checkout.jsp"; 
+                    }
+                };
+                xhttp.send(params); 
             });
         }
 
@@ -161,7 +122,7 @@
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                         alert("Deleted Successfully!");
-                        location.reload();
+                        location.reload()
                     }
                 };
                 xhttp.send(params); 
