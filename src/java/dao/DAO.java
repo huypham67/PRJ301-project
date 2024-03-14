@@ -274,8 +274,8 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
     }
-    
-    public void addCourse(Course course){
+
+    public void addCourse(Course course) {
         String sql = "INSERT [dbo].[Courses] ([id], [name], [image], [description], [price], [duration], [cid], [publicDate]) VALUES (?, ?, ?, ?, ?, ?, ?, CAST(? AS DateTime))";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -292,9 +292,9 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
     }
-   
-    public void deleteCourseById(String id){
-         String sql = "DELETE Courses where id = ?";
+
+    public void deleteCourseById(String id) {
+        String sql = "DELETE Courses where id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, id);
@@ -303,19 +303,19 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
     }
-    
-    public void updateCourse(Course course){
-         String sql = " UPDATE [dbo].[Courses]\n" +
-            "SET [name] = ?,\n" +
-            "    [image] = ?,\n" +
-            "    [description] = ?,\n" +
-            "    [price] = ?,\n" +
-            "    [duration] = ?,\n" +
-            "    [cid] = ?,\n" +
-            "    [publicDate] = CAST(? AS DateTime)\n" +
-            "WHERE [id] = ?;";
+
+    public void updateCourse(Course course) {
+        String sql = " UPDATE [dbo].[Courses]\n"
+                + "SET [name] = ?,\n"
+                + "    [image] = ?,\n"
+                + "    [description] = ?,\n"
+                + "    [price] = ?,\n"
+                + "    [duration] = ?,\n"
+                + "    [cid] = ?,\n"
+                + "    [publicDate] = CAST(? AS DateTime)\n"
+                + "WHERE [id] = ?;";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);          
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, course.getName());
             ps.setString(2, course.getImage());
             ps.setString(3, course.getDescription());
@@ -360,14 +360,16 @@ public class DAO extends DBContext implements Serializable {
                 t.setDate(rs.getString(3));
                 t.setTotalPrice(rs.getDouble(4));
                 List<Order> orders = new ArrayList<>();
-                String sql1 = "select courseId, quantity from Orders where transactionId = ?";
+                String sql1 = "select courseId, activationCode, endDate, quantity from Orders where transactionId = ?";
                 PreparedStatement ps1 = connection.prepareStatement(sql1);
                 ps1.setString(1, rs.getString(1));
                 ResultSet rs1 = ps1.executeQuery();
                 while (rs1.next()) {
                     Course c = dao.getCourseById(rs1.getString(1));
-                    int quantity = rs1.getInt(2);
-                    orders.add(new Order(c, quantity));
+                    String activationCode = rs1.getString(2);
+                    String endDate = rs1.getString(3);
+                    int quantity = rs1.getInt(4);
+                    orders.add(new Order(c, quantity, activationCode, endDate));
                 }
                 t.setListOrders(orders);
                 list.add(t);
@@ -379,7 +381,7 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public void insertTransaction(Order o, User user) {
-        String transactionId = generateRandomCode();
+        String transactionId = DAO.generateRandomCode("transaction");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String sql1 = "INSERT INTO [dbo].[Transactions]\n"
                 + "           ([id]\n"
@@ -398,19 +400,24 @@ public class DAO extends DBContext implements Serializable {
         } catch (Exception e) {
             System.out.println(e);
         }
+        String activationCode = DAO.generateRandomCode("activation");
         String sql2 = "INSERT INTO [dbo].[Orders]\n"
                 + "           ([courseId]\n"
                 + "           ,[transactionId]\n"
+                + "           ,[activationCode]\n"
+                + "           ,[endDate]\n"
                 + "           ,[quantity]\n"
                 + "           ,[price])\n"
-                + "     VALUES\n" 
-                + "           (?, ?, ?, ?)";
+                + "     VALUES\n"
+                + "           (?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql2);
             ps.setString(1, o.getCourse().getId());
             ps.setString(2, transactionId);
-            ps.setInt(3, o.getQuantity());
-            ps.setDouble(4, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
+            ps.setString(3, sql2);
+            ps.setString(4, o.getEndDate());
+            ps.setInt(5, o.getQuantity());
+            ps.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
@@ -418,17 +425,22 @@ public class DAO extends DBContext implements Serializable {
 
     }
 
-    public String generateRandomCode() {
-        // Tạo một đối tượng Random
-        Random random = new Random();
-        // Tạo mã TRAN + 5 ký tự số ngẫu nhiên
-        StringBuilder codeBuilder = new StringBuilder("TRAN");
-        for (int i = 0; i < 9; i++) {
-            int randomNumber = random.nextInt(10); // Số ngẫu nhiên từ 0 đến 9
-            codeBuilder.append(randomNumber);
+    public static String generateRandomCode(String key) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int length = 0;
+        if (key == "transaction") {
+            length = 10;
         }
-
-        return codeBuilder.toString();
+        if (key == "activation") {
+            length = 8;
+        }
+        StringBuilder sb = new StringBuilder(length);
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
     }
 
     public static void main(String[] args) {

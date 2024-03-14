@@ -12,14 +12,19 @@ package model;
 public class Order{
     private Course course;
     private int quantity;
-
+    private String activationCode;
+    private String endDate;
     public Order() {
     }
 
-    public Order(Course course, int quantity) {
+    public Order(Course course, int quantity, String activationCode, String endDate) {
         this.course = course;
         this.quantity = quantity;
+        this.activationCode = activationCode;
+        this.endDate = endDate;
     }
+
+    
 
     public Course getCourse() {
         return course;
@@ -36,5 +41,22 @@ public class Order{
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-   
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+    
+    
 }
