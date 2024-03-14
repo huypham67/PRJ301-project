@@ -23,9 +23,7 @@ public class Order{
         this.activationCode = activationCode;
         this.endDate = endDate;
     }
-
     
-
     public Course getCourse() {
         return course;
     }

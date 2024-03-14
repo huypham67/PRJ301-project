@@ -31,7 +31,7 @@
                 <tbody>              
                     <c:forEach items="${coursesToCheckout}" var="course" varStatus="loop">
                         <tr>
-                            <td>${loop.index + 1}</td>
+                            <td>${course.id}</td>
                             <td>${course.name}</td>
                             <td>
                                 <c:forEach items="${listC}" var="category">
@@ -41,8 +41,8 @@
                                 </c:forEach>
                             </td>
                             <td>
-                                <select name="quantity" id="quantity${loop.index}">
-                                    <c:forEach begin="1" end="10" var="i">
+                                <select name="quantity" id="quantity${loop.index}" onchange="clearAndUpdateOrderSummary()">
+                                    <c:forEach begin="0" end="10" var="i">
                                         <option value="${i}">${i}</option>
                                     </c:forEach>
                                 </select>
@@ -60,26 +60,83 @@
                     <div class="card-header bg-transparent border-bottom py-3 px-4">
                         <h5 class="font-size-16 mb-0">Order Summary <span class="float-end">#MN0124</span></h5>
                     </div>
+                    
                     <div class="card-body p-4 pt-2">
                         <div class="table-responsive">
                             <table class="table mb-0">
-                                <tbody>
+                                <thead>
                                     <tr>
-                                        <td>Sub Total :</td>
-                                        <td class="text-end"></td>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Discount</th>
+                                        <th scope="col">Subtotal</th>
                                     </tr>
-                                    <!-- Add more rows for other details such as discount, shipping charge, estimated tax, and total -->
+                                </thead>
+                                <tbody id="orderSummaryBody">
+                                    <!-- Order summary content will be inserted here -->
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3"><strong>Total:</strong></td>
+                                        <td id="totalPriceCell">0.00</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
+                        <button onclick="purchase()">Purchase</button>
                     </div>
                 </div>                    
             </div>
         </div>   
     </div>
-    
+
+    <!-- Script section -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // JavaScript code here
+        function updateOrderSummary() {
+            var total = 0;
+            var rows = document.querySelectorAll("tbody tr");
+
+            var orderSummaryBody = document.getElementById("orderSummaryBody");
+            orderSummaryBody.innerHTML = '';
+
+            rows.forEach(function(row, index) {
+                var id = row.querySelector("td:first-child").innerText; 
+                var quantity = parseInt(row.querySelector("select").value);
+                var price = parseFloat(row.querySelector("td:nth-child(6)").innerText);
+                var discount = parseFloat(row.querySelector("td:nth-child(5)").innerText);
+                var subtotal = (quantity * price) - discount;
+                total += subtotal;
+
+                // Add the data to the order summary table
+                var newRow = document.createElement('tr');
+                newRow.innerHTML = '<td>' + id + '</td>' +
+                                   '<td>' + quantity + '</td>' +
+                                   '<td>' + discount.toFixed(2) + '</td>' +
+                                   '<td>' + subtotal.toFixed(2) + '</td>';
+                orderSummaryBody.appendChild(newRow);
+            });
+            
+            document.getElementById("totalPriceCell").innerText = total.toFixed(2);
+        }
+
+        function purchase() {
+            // Add your purchase logic here
+            alert("Thank you for your purchase!");
+        }
+
+        function clearOrderSummary() {
+            var summaryRows = document.querySelectorAll("#orderSummaryBody tr");
+            summaryRows.forEach(function(row) {
+                row.remove();
+            });
+            document.getElementById("totalPriceCell").innerText = "0.00";
+        }
+
+        function clearAndUpdateOrderSummary() {
+            clearOrderSummary();
+            updateOrderSummary();
+        }
     </script>
 </body>
 </html>
