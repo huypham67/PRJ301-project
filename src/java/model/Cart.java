@@ -9,11 +9,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author huypd
- */
 public class Cart implements Serializable{
+
     Map<Course, Integer> cartList;
 
     public Cart() {
@@ -27,6 +24,7 @@ public class Cart implements Serializable{
     public void setCartList(Map<Course, Integer> cartList) {
         this.cartList = cartList;
     }
+      
     
     public void addCourseToCart(Course c, int quantity) {
         this.cartList.put(c, quantity);

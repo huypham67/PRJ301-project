@@ -47,7 +47,7 @@
     }
 </style>
 
-<div style="padding-top: 80px">
+<div style="padding-top: 100px">
     <form id="checkoutForm" action="cart-check-out" method="post"> 
         <div>						
             <h4>Your information</h4>

@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -236,7 +237,7 @@ public class DAO extends DBContext implements Serializable {
                 if (rs.next()) {
                     s += rs.getDouble(1) * quantity * (1 - rs.getDouble(2));
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
             }
         }
         return s;
@@ -329,7 +330,6 @@ public class DAO extends DBContext implements Serializable {
         }
     }
 
-    //xử lý dữ liệu từ cookie
     public String encode(Cart cart) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bos);
@@ -338,7 +338,6 @@ public class DAO extends DBContext implements Serializable {
         return Base64.getEncoder().encodeToString(bos.toByteArray());
     }
 
-    // Deserialize a string to Cart object
     public Cart decode(String cartString) throws IOException, ClassNotFoundException {
         byte[] data = Base64.getDecoder().decode(cartString);
         ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));

@@ -73,33 +73,38 @@
             document.getElementById("buySelectedBtn").innerText = "Buy Selected (" + selectedCount + ")";
         }
         
-        function buySelected() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            var selectedCount = checkboxes.length;
+    function buySelected() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        var selectedIds = [];
 
-            if (selectedCount === 0) {
-                alert("Please select at least one item to buy.");
-                return;
-            }
+        checkboxes.forEach(function(checkbox) {
+            selectedIds.push(checkbox.value);
+        });
 
-            showConfirmationPopup("Are you sure you want to buy the selected items?", function() {
-                var ids = [];         
-                checkboxes.forEach(function (checkbox) {
-                    ids.push(checkbox.value);
-                });
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "buyCheckbox", true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                var params = "selectedIds=" + encodeURIComponent(ids.join(","));
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        alert("Thank you! Here we go to checkout!");
-                        window.location.href = "checkout.jsp"; 
-                    }
-                };
-                xhttp.send(params); 
-            });
+        if (selectedIds.length === 0) {
+            alert("Please select at least one item to buy.");
+            return;
         }
+
+        showConfirmationPopup("Are you sure you want to buy the selected items?", function() {
+            var selectedIdsString = selectedIds.join(",");
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "buyCheckbox", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var params = "selectedIds=" + encodeURIComponent(selectedIdsString);
+
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    alert("Thank you! Here we go to checkout!");
+                    window.location.href = "checkout"; 
+                }
+            };
+         
+            xhttp.send(params);
+        });
+    }
+
 
         function removeSelected() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
