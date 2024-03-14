@@ -56,7 +56,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -81,7 +81,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -104,7 +104,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -134,7 +134,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -157,7 +157,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -213,7 +213,7 @@ public class DAO extends DBContext implements Serializable {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getDouble(5),
-                        rs.getString(6),
+                        rs.getInt(6),
                         rs.getInt(7),
                         rs.getString(8),
                         rs.getDouble(9));
@@ -251,7 +251,6 @@ public class DAO extends DBContext implements Serializable {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 return rs.getString(1);
-
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -276,7 +275,18 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public void addCourse(Course course) {
-        String sql = "INSERT [dbo].[Courses] ([id], [name], [image], [description], [price], [duration], [cid], [publicDate]) VALUES (?, ?, ?, ?, ?, ?, ?, CAST(? AS DateTime))";
+        String sql = "INSERT INTO [dbo].[Courses]\n"
+                + "           ([id]\n"
+                + "           ,[name]\n"
+                + "           ,[image]\n"
+                + "           ,[description]\n"
+                + "           ,[price]\n"
+                + "           ,[duration_month]\n"
+                + "           ,[cid]\n"
+                + "           ,[publicDate]\n"
+                + "           ,[discount])\n"
+                + "     VALUES\n"
+                + "           (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, course.getId());
@@ -284,9 +294,10 @@ public class DAO extends DBContext implements Serializable {
             ps.setString(3, course.getImage());
             ps.setString(4, course.getDescription());
             ps.setDouble(5, course.getPrice());
-            ps.setString(6, course.getDuration());
+            ps.setInt(6, course.getDuration_month());
             ps.setInt(7, course.getCid());
             ps.setString(8, course.getPublicDate());
+            ps.setDouble(9, course.getDiscount());
             ResultSet rs = ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e);
@@ -305,25 +316,27 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public void updateCourse(Course course) {
-        String sql = " UPDATE [dbo].[Courses]\n"
-                + "SET [name] = ?,\n"
-                + "    [image] = ?,\n"
-                + "    [description] = ?,\n"
-                + "    [price] = ?,\n"
-                + "    [duration] = ?,\n"
-                + "    [cid] = ?,\n"
-                + "    [publicDate] = CAST(? AS DateTime)\n"
-                + "WHERE [id] = ?;";
+        String sql = "UPDATE [dbo].[Courses]\n"
+                + "   SET [name] = ?\n"
+                + "      ,[image] = ?\n"
+                + "      ,[description] = ?\n"
+                + "      ,[price] = ?\n"
+                + "      ,[duration_month] = ?\n"
+                + "      ,[cid] = ?\n"
+                + "      ,[publicDate] = ?\n"
+                + "      ,[discount] = ?\n"
+                + " WHERE [id] = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, course.getName());
             ps.setString(2, course.getImage());
             ps.setString(3, course.getDescription());
             ps.setDouble(4, course.getPrice());
-            ps.setString(5, course.getDuration());
+            ps.setInt(5, course.getDuration_month());
             ps.setInt(6, course.getCid());
             ps.setString(7, course.getPublicDate());
-            ps.setString(8, course.getId());
+            ps.setDouble(8, course.getDiscount());
+            ps.setString(9, course.getId());
             ResultSet rs = ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e);
@@ -380,7 +393,12 @@ public class DAO extends DBContext implements Serializable {
         return list;
     }
 
-    public void insertTransaction(Order o, User user) {
+    //mới update
+    public void insertTransaction(List<Order> listO, User user) {
+        double total = 0;
+        for (Order o : listO) {
+            total += o.getCourse().getPrice() * o.getQuantity()*(1 - o.getCourse().getDiscount());
+        }
         String transactionId = DAO.generateRandomCode("transaction");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String sql1 = "INSERT INTO [dbo].[Transactions]\n"
@@ -395,43 +413,44 @@ public class DAO extends DBContext implements Serializable {
             ps.setString(1, transactionId);
             ps.setInt(2, user.getId());
             ps.setString(3, dateFormat.format(new Date()));
-            ps.setDouble(4, o.getCourse().getPrice() * o.getQuantity());
+            ps.setDouble(4, total);
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
         }
-        String activationCode = DAO.generateRandomCode("activation");
-        String sql2 = "INSERT INTO [dbo].[Orders]\n"
-                + "           ([courseId]\n"
-                + "           ,[transactionId]\n"
-                + "           ,[activationCode]\n"
-                + "           ,[endDate]\n"
-                + "           ,[quantity]\n"
-                + "           ,[price])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?,?,?)";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql2);
-            ps.setString(1, o.getCourse().getId());
-            ps.setString(2, transactionId);
-            ps.setString(3, sql2);
-            ps.setString(4, o.getEndDate());
-            ps.setInt(5, o.getQuantity());
-            ps.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
-            ps.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e);
+        for (Order o : listO) {
+            String activationCode = DAO.generateRandomCode("activation");
+            String sql2 = "INSERT INTO [dbo].[Orders]\n"
+                    + "           ([courseId]\n"
+                    + "           ,[transactionId]\n"
+                    + "           ,[activationCode]\n"
+                    + "           ,[endDate]\n"
+                    + "           ,[quantity]\n"
+                    + "           ,[price])\n"
+                    + "     VALUES\n"
+                    + "           (?,?,?,?,?,?)";
+            try {
+                PreparedStatement ps = connection.prepareStatement(sql2);
+                ps.setString(1, o.getCourse().getId());
+                ps.setString(2, transactionId);
+                ps.setString(3, sql2);
+                ps.setString(4, o.getEndDate());
+                ps.setInt(5, o.getQuantity());
+                ps.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
-
     }
 
     public static String generateRandomCode(String key) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int length = 0;
-        if (key == "transaction") {
+        if (key.equals("transaction")) {
             length = 10;
         }
-        if (key == "activation") {
+        if (key.equals("activation")) {
             length = 8;
         }
         StringBuilder sb = new StringBuilder(length);

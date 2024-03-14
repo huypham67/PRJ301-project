@@ -77,33 +77,19 @@ public class UpdateProductServlet extends HttpServlet {
         String image = request.getParameter("image");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
-        String duration = request.getParameter("numberDu") +" "+request.getParameter("selectDu");
+        int duration_month = Integer.parseInt(request.getParameter("numberDu"));
         int cid = Integer.parseInt(request.getParameter("category"));
         String publicDate = request.getParameter("publicDate")+":00.000";
         double discount = 0;
-        if(!isValidUrl(image)){
-            image = "https://i.imgur.com/mYIzrwF.jpeg";
-        }
         try{
             DAO dao = DAO.getInstance();
-            Course course = new Course(id, name, image, description, price, duration, cid, publicDate, discount);
+            Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, discount);
             dao.updateCourse(course);
         } catch(Exception e){
             System.out.println(e);
         }
         response.sendRedirect("manager");
     }
-    
-    public boolean isValidUrl(String url) {
-        String imageUrlRegex = ".*\\.(jpg|jpeg|png|gif|bmp)$";       
-        Pattern pattern = Pattern.compile(imageUrlRegex);
-        Matcher matcher = pattern.matcher(url);
-        return matcher.matches();
-    }
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

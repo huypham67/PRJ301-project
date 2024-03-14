@@ -59,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>                        
-                             <c:forEach items="${listP}" var="o">
+                            <c:forEach items="${listP}" var="o">
                                 <tr>
                                     <td>
                                         <span class="custom-checkbox">
@@ -74,9 +74,8 @@
                                     </td>
                                     <td>${o.price}$</td>
                                     <td>
-                                        <a onclick="showModalEdit('${o.id}','${o.name}','${o.image}','${o.description}','${o.price}','${o.duration}','${o.cid}','${o.publicDate}')"  
-                                        class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                        
+                                        <a onclick="showModalEdit('${o.id}', '${o.name}', '${o.image}', '${o.description}', '${o.price}', '${o.duration_month}', '${o.cid}', '${o.publicDate}')"  
+                                           class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>          
                                         <a href="deleteProduct?pid=${o.id}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                                     </td>
                                 </tr>
@@ -106,10 +105,10 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">	
-<!--                            <div class="form-group">
-                                <label>Id</label>
-                                <input id="idAdd" name="id" type="text" class="form-control" required>
-                            </div>-->
+                            <!--                            <div class="form-group">
+                                                            <label>Id</label>
+                                                            <input id="idAdd" name="id" type="text" class="form-control" required>
+                                                        </div>-->
                             <div class="form-group">
                                 <label>Name</label>
                                 <input id="nameAdd" name="name" type="text" class="form-control" required>
@@ -132,9 +131,8 @@
                                     <input id="nuAdd" name="numberDu" type="number" class="form-control" required> 
                                 </div>
                                 <div class="form-group">
-                                    <select id="seAdd" name="selectDu" class="form-control" aria-label="Default select example">
-                                        <option value="Weeks">Weeks</option>
-                                        <option value="Years">Years</option>
+                                    <select readonly id="seAdd" name="selectDu" class="form-control" aria-label="Default select example">
+                                        <option value="Weeks">Month</option>
                                     </select>   
                                 </div>
                             </div>
@@ -149,7 +147,11 @@
                             <div class="form-group">
                                 <label>Public Date</label>
                                 <input id="pdAdd"  name="publicDate" type="datetime-local" class="form-control" required>
-                            </div>	                           
+                            </div>
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input id="discountAdd" name="discount" type="number" class="form-control" step="0.01" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -195,14 +197,13 @@
                                     <input id="nuEdit" name="numberDu" type="number" class="form-control" required> 
                                 </div>
                                 <div class="form-group">
-                                    <select id="seEdit" name="selectDu" class="form-control" aria-label="Default select example">
-                                    </select>   
+                                    <input value="month" type="text" class="form-control" readonly> 
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Category</label>
                                 <select name="category" id="categorySelect" class="form-control" aria-label="Default select example">
-<!--                                    <option></option>-->
+                                    <!--                                    <option></option>-->
                                     <c:forEach items="${listC}" var="o" varStatus="loop">
                                         <option value="${o.cid}">${o.cname}</option>
                                     </c:forEach>
@@ -212,6 +213,9 @@
                                 <label>Public Date</label>
                                 <input id="pdEdit"  name="publicDate" type="datetime-local" class="form-control" required>
                             </div>
+                            <div class="form-group">
+                                <label>Discount</label>
+                                <input id="discountEdit" name="discount" type="number" class="form-control" step="0.01" required>                            </div>
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -242,100 +246,101 @@
         </div>
         <script src="js/manager.js" type="text/javascript"></script>
         <script>
-            document.getElementById("deleteButton").addEventListener("click", function() {
-                // Kích hoạt sự kiện click trên nút "buttonform"
-                document.getElementById("buttonform").click();
-            });
-            function showModalAdd() {
-                $('#addCourseModal').modal('show');
-            }
-            function showModalDelete() {
-                $('#deleteCourseModal').modal('show');
-            }
-            var count = 0; var countD = true;
-            var i = 0; var iD = 0;
-            function showModalEdit(idGet,name,image,des,price,duration,cid,publicdate) {
-                const idEdit = document.getElementById('idEdit');
-                const nameEdit = document.getElementById('nameEdit');
-                const imageEdit = document.getElementById('imageEdit');
-                const desEdit = document.getElementById('desEdit');
-                const priceEdit = document.getElementById('priceEdit');
-                const nuEdit = document.getElementById('nuEdit');
-                const pdEdit = document.getElementById('pdEdit');
-                idEdit.value = idGet;
-                nameEdit.value = name;
-                imageEdit.value = image;
-                priceEdit.value = parseFloat(price);
-                desEdit.value = des;
-                
-                var numberPattern = /\d+/;
-                var extractedNumber = duration.match(numberPattern);
-                if (extractedNumber !== null) {
-                    nuEdit.value = extractedNumber[0];
-                }
-                var remainingText = duration.replace(/\d+/, '');
-                addOption(remainingText,"weeks");
-                var publicDate = new Date(publicdate); 
-                var formattedDate = publicDate.getFullYear() + '-' + String(publicDate.getMonth() + 1).padStart(2, '0') + '-' + String(publicDate.getDate()).padStart(2, '0') + 'T' + String(publicDate.getHours()).padStart(2, '0') + ':' + String(publicDate.getMinutes()).padStart(2, '0');
-                pdEdit.value = formattedDate;
-                var index = parseInt(cid, 10) - 1;
-                var selectElement = document.getElementById("categorySelect");
-                var newOption = document.createElement("option");
-                newOption.value = cid;
-                newOption.text = "";
-                switch (index) {
-                    case 0:
-                        newOption.text = "Web Development";
-                        break;
-                    case 1:
-                        newOption.text = "Data Science";
-                        break;
-                    case 2:
-                        newOption.text = "Mobile App Development";
-                        break;
-                    case 3:
-                        newOption.text = "Machine Learning";
-                        break;
-                    case 4:
-                        newOption.text = "Game Development";
-                        break;
-                }
-                                              
-                if(count !== 0){
-                    selectElement.remove(0);
-                }
-                selectElement.add(newOption, 0);
-                selectElement.selectedIndex = 0;
-                var optionToHide = selectElement.options[i]; 
-                optionToHide.style.display = "";
-                optionToHide = selectElement.options[index +1];
-                optionToHide.style.display = "none";                  
-                i = index+1;
-                count++;         
-                $('#editCourseModal').modal('show');
-            }
-            
-            function addOption(optionValue, op) {
-                var selectElement = document.getElementById("seEdit");
-                selectElement.innerHTML = "";
-                var option1 = document.createElement("option");            
-                option1.value = "Weeks";
-                option1.text = "Weeks";
-                var option2 = document.createElement("option");
-                option2.value = "Years";
-                option2.text = "Years";
-                            
-                if(optionValue === " Weeks" || optionValue === " weeks"){
-                   selectElement.appendChild(option1);
-                   selectElement.appendChild(option2);
-                }
-                else if(optionValue === " Years" || optionValue === " years"){
-                    selectElement.appendChild(option2);
-                    selectElement.appendChild(option1);
-                }	
-            }
+                                            document.getElementById("deleteButton").addEventListener("click", function () {
+                                                // Kích hoạt sự kiện click trên nút "buttonform"
+                                                document.getElementById("buttonform").click();
+                                            });
+                                            function showModalAdd() {
+                                                $('#addCourseModal').modal('show');
+                                            }
+                                            function showModalDelete() {
+                                                $('#deleteCourseModal').modal('show');
+                                            }
+                                            var count = 0;
+                                            var countD = true;
+                                            var i = 0;
+                                            var iD = 0;
+                                            function showModalEdit(idGet, name, image, des, price, duration, cid, publicdate) {
+                                                const idEdit = document.getElementById('idEdit');
+                                                const nameEdit = document.getElementById('nameEdit');
+                                                const imageEdit = document.getElementById('imageEdit');
+                                                const desEdit = document.getElementById('desEdit');
+                                                const priceEdit = document.getElementById('priceEdit');
+                                                const nuEdit = document.getElementById('nuEdit');
+                                                const pdEdit = document.getElementById('pdEdit');
+                                                idEdit.value = idGet;
+                                                nameEdit.value = name;
+                                                imageEdit.value = image;
+                                                priceEdit.value = parseFloat(price);
+                                                desEdit.value = des;
 
-            
+                                                var numberPattern = /\d+/;
+                                                var extractedNumber = duration.match(numberPattern);
+                                                if (extractedNumber !== null) {
+                                                    nuEdit.value = extractedNumber[0];
+                                                }
+                                                var remainingText = duration.replace(/\d+/, '');
+                                                addOption(remainingText, "weeks");
+                                                var publicDate = new Date(publicdate);
+                                                var formattedDate = publicDate.getFullYear() + '-' + String(publicDate.getMonth() + 1).padStart(2, '0') + '-' + String(publicDate.getDate()).padStart(2, '0') + 'T' + String(publicDate.getHours()).padStart(2, '0') + ':' + String(publicDate.getMinutes()).padStart(2, '0');
+                                                pdEdit.value = formattedDate;
+                                                var index = parseInt(cid, 10) - 1;
+                                                var selectElement = document.getElementById("categorySelect");
+                                                var newOption = document.createElement("option");
+                                                newOption.value = cid;
+                                                newOption.text = "";
+                                                switch (index) {
+                                                    case 0:
+                                                        newOption.text = "Web Development";
+                                                        break;
+                                                    case 1:
+                                                        newOption.text = "Data Science";
+                                                        break;
+                                                    case 2:
+                                                        newOption.text = "Mobile App Development";
+                                                        break;
+                                                    case 3:
+                                                        newOption.text = "Machine Learning";
+                                                        break;
+                                                    case 4:
+                                                        newOption.text = "Game Development";
+                                                        break;
+                                                }
+
+                                                if (count !== 0) {
+                                                    selectElement.remove(0);
+                                                }
+                                                selectElement.add(newOption, 0);
+                                                selectElement.selectedIndex = 0;
+                                                var optionToHide = selectElement.options[i];
+                                                optionToHide.style.display = "";
+                                                optionToHide = selectElement.options[index + 1];
+                                                optionToHide.style.display = "none";
+                                                i = index + 1;
+                                                count++;
+                                                $('#editCourseModal').modal('show');
+                                            }
+
+                                            function addOption(optionValue, op) {
+                                                var selectElement = document.getElementById("seEdit");
+                                                selectElement.innerHTML = "";
+                                                var option1 = document.createElement("option");
+                                                option1.value = "Weeks";
+                                                option1.text = "Weeks";
+                                                var option2 = document.createElement("option");
+                                                option2.value = "Years";
+                                                option2.text = "Years";
+
+                                                if (optionValue === " Weeks" || optionValue === " weeks") {
+                                                    selectElement.appendChild(option1);
+                                                    selectElement.appendChild(option2);
+                                                } else if (optionValue === " Years" || optionValue === " years") {
+                                                    selectElement.appendChild(option2);
+                                                    selectElement.appendChild(option1);
+                                                }
+                                            }
+
+
         </script>
     </body>
 </html>

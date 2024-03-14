@@ -64,16 +64,13 @@ public class AddProductServlet extends HttpServlet {
         String image = request.getParameter("image");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
-        String duration = request.getParameter("numberDu") +" "+request.getParameter("selectDu");
+        int duration_month = Integer.parseInt(request.getParameter("numberDu"));
         int cid = Integer.parseInt(request.getParameter("category"));
         String publicDate = request.getParameter("publicDate")+":00.000";
-        if(!isValidUrl(image)){
-            image = "https://i.imgur.com/mYIzrwF.jpeg";
-        }
         String id = randomId(cid);
         try{
             DAO dao = DAO.getInstance();
-            Course course = new Course(id, name, image, description, price, duration, cid, publicDate, 0);
+            Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, 0);
             dao.addCourse(course);
         } catch(Exception e){
             System.out.println(e);
@@ -92,13 +89,6 @@ public class AddProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    }
-    
-    public boolean isValidUrl(String url) {
-       String imageUrlRegex = ".*\\.(jpg|jpeg|png|gif|bmp)$";       
-        Pattern pattern = Pattern.compile(imageUrlRegex);
-        Matcher matcher = pattern.matcher(url);
-        return matcher.matches();
     }
     
     public String randomId(int cid) {

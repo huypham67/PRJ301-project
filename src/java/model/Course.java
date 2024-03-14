@@ -19,7 +19,7 @@ public class Course implements Serializable {
     private String image;
     private String description;
     private double price;
-    private String duration;
+    private int duration_month;
     private int cid;
     private String publicDate;
     private double discount;
@@ -27,17 +27,19 @@ public class Course implements Serializable {
     public Course() {
     }
 
-    public Course(String id, String name, String image, String description, double price, String duration, int cid, String publicDate, double discount) {
+    public Course(String id, String name, String image, String description, double price, int duration_month, int cid, String publicDate, double discount) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.description = description;
         this.price = price;
-        this.duration = duration;
+        this.duration_month = duration_month;
         this.cid = cid;
         this.publicDate = publicDate;
         this.discount = discount;
     }
+
+    
 
     public String getId() {
         return id;
@@ -79,13 +81,15 @@ public class Course implements Serializable {
         this.price = price;
     }
 
-    public String getDuration() {
-        return duration;
+    public int getDuration_month() {
+        return duration_month;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setDuration_month(int duration_month) {
+        this.duration_month = duration_month;
     }
+
+    
 
     public int getCid() {
         return cid;
@@ -125,7 +129,7 @@ public class Course implements Serializable {
         hash = 79 * hash + Objects.hashCode(this.description);
         hash = 79 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
         hash = 79 * hash + (int) (Double.doubleToLongBits(this.discount) ^ (Double.doubleToLongBits(this.discount) >>> 32));
-        hash = 79 * hash + Objects.hashCode(this.duration);
+        hash = 79 * hash + this.duration_month;
         hash = 79 * hash + this.cid;
         hash = 79 * hash + Objects.hashCode(this.publicDate);
         return hash;
@@ -158,7 +162,7 @@ public class Course implements Serializable {
         if (!Objects.equals(this.description, other.description)) {
             return false;
         }
-        if (!Objects.equals(this.duration, other.duration)) {
+        if (this.duration_month != other.duration_month) {
             return false;
         }
         if (!Objects.equals(this.publicDate, other.publicDate)) {
@@ -172,8 +176,10 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        return "Course{" + "id=" + id + ", name=" + name + ", image=" + image + ", description=" + description + ", price=" + price + ", duration=" + duration + ", cid=" + cid + ", publicDate=" + publicDate + ", discount=" + discount + '}';
+        return "Course{" + "id=" + id + ", name=" + name + ", image=" + image + ", description=" + description + ", price=" + price + ", duration_month=" + duration_month + ", cid=" + cid + ", publicDate=" + publicDate + ", discount=" + discount + '}';
     }
+
+    
 
     public static void main(String[] args) {
         Course c = new Course();
