@@ -15,14 +15,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Course;
 import dao.DAO;
-import jakarta.servlet.annotation.WebServlet;
 import java.util.List;
 import java.util.Random;
 /**
  *
  * @author Administrator
  */
-@WebServlet(name="AddProductServlet", urlPatterns={"/addProduct"})
 public class AddProductServlet extends HttpServlet {
    
     /** 
@@ -64,13 +62,19 @@ public class AddProductServlet extends HttpServlet {
         String image = request.getParameter("image");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
-        int duration_month = Integer.parseInt(request.getParameter("numberDu"));
+//        String duration = request.getParameter("numberDu") +" "+request.getParameter("selectDu");
+        int duration_month = 1;
         int cid = Integer.parseInt(request.getParameter("category"));
         String publicDate = request.getParameter("publicDate")+":00.000";
+        if(!isValidUrl(image)){
+//            image = "https://i.imgur.com/mYIzrwF.jpeg";
+              image = "https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg";
+        }
         String id = randomId(cid);
+        double discount= (double) Double.parseDouble(request.getParameter("discount"))/100;
         try{
             DAO dao = DAO.getInstance();
-            Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, 0);
+            Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, discount);
             dao.addCourse(course);
         } catch(Exception e){
             System.out.println(e);
@@ -89,6 +93,13 @@ public class AddProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
+    }
+    
+    public boolean isValidUrl(String url) {
+       String imageUrlRegex = ".*\\.(jpg|jpeg|png|gif|bmp)$";       
+        Pattern pattern = Pattern.compile(imageUrlRegex);
+        Matcher matcher = pattern.matcher(url);
+        return matcher.matches();
     }
     
     public String randomId(int cid) {
