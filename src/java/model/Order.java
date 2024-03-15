@@ -17,6 +17,12 @@ public class Order{
     public Order() {
     }
 
+    public Order(Course course, int quantity) {
+        this.course = course;
+        this.quantity = quantity;
+    }
+    
+
     public Order(Course course, int quantity, String activationCode, String endDate) {
         this.course = course;
         this.quantity = quantity;

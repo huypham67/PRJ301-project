@@ -400,8 +400,7 @@ public class DAO extends DBContext implements Serializable {
         String sql1 = "INSERT INTO [dbo].[Transactions] ([id], [userId], [date], [totalPrice]) VALUES (?, ?, GETDATE(), ?)";
         String sql2 = "INSERT INTO [dbo].[Orders] ([courseId], [transactionId], [activationCode], [endDate], [quantity], [price]) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps1 = connection.prepareStatement(sql1);
-             PreparedStatement ps2 = connection.prepareStatement(sql2)) {
+        try (PreparedStatement ps1 = connection.prepareStatement(sql1); PreparedStatement ps2 = connection.prepareStatement(sql2)) {
 
             for (Order o : listO) {
                 total += o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount());
@@ -429,7 +428,7 @@ public class DAO extends DBContext implements Serializable {
         }
     }
 
-    public  String generateRandomCode(String key) {
+    public String generateRandomCode(String key) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int length = 0;
         if (key.equals("transaction")) {
@@ -447,9 +446,57 @@ public class DAO extends DBContext implements Serializable {
         return sb.toString();
     }
 
+
+    public void updateExpirationDay(String activationCode) {
+        String sql = "UPDATE Orders\n"
+                + "SET endDate = DATEADD(MONTH, c.duration_month, getdate())\n"
+                + "FROM Orders o\n"
+                + "	JOIN Courses c\n"
+                + "	ON o.courseId = c.id\n"
+                + "WHERE activationCode = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, activationCode);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public Order getOrderByActivationCode(String activationCode) {
+        String sql = "SELECT courseId, quantity, activationCode, endDate\n"
+                + "FROM Orders \n"
+                + "WHERE activationCode = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, activationCode);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Course c = getCourseById(rs.getString(1));
+                return new Order(c, rs.getInt(2), rs.getString(3), rs.getString(4));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public void cancelOrder(String courseId, String transactionCode) {
+        String sql = "DELETE\n"
+                + "FROM Orders\n"
+                + "WHERE courseId = ? AND transactionId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, courseId);
+            ps.setString(2, transactionCode);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
     public static void main(String[] args) {
         DAO dao = DAO.getInstance();
-        System.out.println(dao.login("huy@gmail.com", "123"));
+        dao.cancelOrder("MD102", "7HFquVZstt");
     }
 
 }
