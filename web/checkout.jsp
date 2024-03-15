@@ -133,42 +133,44 @@
             updateOrderSummary();
         }
         
-        function purchase() {
-            var rows = document.querySelectorAll("#orderSummaryBody tr");
-            var selectedIds = [];
+function purchase() {
+    var rows = document.querySelectorAll("#orderSummaryBody tr");
+    var selectedIds = [];
 
-            rows.forEach(function(row) {
-                var cells = row.querySelectorAll("td");
-                var id = cells[0].innerText;
-                var quantity = parseInt(cells[1].innerText);
+    rows.forEach(function(row) {
+        var cells = row.querySelectorAll("td");
+        var id = cells[0].innerText;
+        var quantity = parseInt(cells[1].innerText);
 
-                if (quantity > 0) {
-                    selectedIds.push(id);
-                }
-            });
-
-            var params = "selectedIds=" + selectedIds.join(",");
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "PurchaseServlet", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {
-                        // Xử lý phản hồi từ server (nếu cần)
-                        alert("Purchase successful!");
-                        // Chuyển hướng đến trang /order
-                        window.location.href = "order";
-                    } else {
-                        // Xử lý lỗi (nếu có)
-                        alert("An error occurred while processing the purchase.");
-                    }
-                }
-            };
-
-            xhttp.send(params);
+        if (quantity > 0) {
+            selectedIds.push(id);
         }
+    });
+
+    var params = "selectedIds=" + selectedIds.join(",");
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "PurchaseServlet", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                alert("Purchase successful!");
+                window.location.href = "orders";
+            } else if (this.status == 400) {
+                alert("Bad request! Please try again");
+            } else if (this.status == 401) {
+                alert("Unauthorized! Please login" );             
+                window.location.href = "login";
+            } else {
+                alert("An error occurred while processing the purchase. Please contact to admin.");
+            }
+        }
+    };
+
+    xhttp.send(params);
+}
 
     </script>
 </body>

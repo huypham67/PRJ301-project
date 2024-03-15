@@ -396,10 +396,11 @@ public class DAO extends DBContext implements Serializable {
     //mới update
     public void insertTransaction(List<Order> listO, User user) {
         double total = 0;
+        DAO dao = instance;
         for (Order o : listO) {
             total += o.getCourse().getPrice() * o.getQuantity()*(1 - o.getCourse().getDiscount());
         }
-        String transactionId = DAO.generateRandomCode("transaction");
+        String transactionId = dao.generateRandomCode("transaction");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String sql1 = "INSERT INTO [dbo].[Transactions]\n"
                 + "           ([id]\n"
@@ -419,7 +420,7 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
         for (Order o : listO) {
-            String activationCode = DAO.generateRandomCode("activation");
+            String activationCode = dao.generateRandomCode("activation");
             String sql2 = "INSERT INTO [dbo].[Orders]\n"
                     + "           ([courseId]\n"
                     + "           ,[transactionId]\n"
@@ -444,7 +445,7 @@ public class DAO extends DBContext implements Serializable {
         }
     }
 
-    public static String generateRandomCode(String key) {
+    public  String generateRandomCode(String key) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int length = 0;
         if (key.equals("transaction")) {

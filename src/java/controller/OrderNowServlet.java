@@ -50,7 +50,7 @@ public class OrderNowServlet extends HttpServlet {
         String quantityS = request.getParameter("quantity");
         int quantity = Integer.parseInt(quantityS);
         Course course = dao.getCourseById(id);
-        String activationCode = DAO.generateRandomCode("activation");
+        String activationCode = dao.generateRandomCode("activation");
         String endDate = "";
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");

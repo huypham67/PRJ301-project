@@ -37,6 +37,7 @@ public class CheckOutServlet extends HttpServlet {
                 }
             }           
             
+            
             List<Category> listC = dao.getAllCategories();
             request.setAttribute("listC", listC);
 

@@ -1,12 +1,10 @@
 package controller;
 
 import dao.DAO;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import model.Cart;
+import model.Course;
+import model.Order;
+import model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,11 +13,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Cart;
-import model.Course;
-
 
 @WebServlet("/PurchaseServlet")
 public class PurchaseServlet extends HttpServlet {
@@ -28,50 +27,60 @@ public class PurchaseServlet extends HttpServlet {
     protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        // Lấy dữ liệu từ yêu cầu POST
-        String postData = request.getParameter("data");
+        
+        String track = request.getParameter("selectedIds");
+        String [] ids = track.split(",");
+        if (ids == null || ids.length == 0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No courses selected for purchase.");
+            return;
+        }
+
+        // Retrieve user and cart information from session and cookies
         HttpSession session = request.getSession();
-        
-        // Phân tích dữ liệu thành các cặp key-value
-        String[] ids = postData.split(",");
-        List<Course> coursesPurchase = new ArrayList<>();
-        
+        User user = (User) session.getAttribute("acc");
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in.");
+            return;
+        }
+
         Cart cart = new Cart();
-        DAO dao = DAO.getInstance();
-        Cookie[] arr = request.getCookies();
-        if (arr != null) {
-            for (Cookie c : arr) {
-                if (c.getName().equals("cartC")) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("cartC")) {
                     try {
-                        cart = dao.decode(c.getValue());
+                        cart = DAO.getInstance().decode(cookie.getValue());
                     } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(PurchaseServlet.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         }
-        
+
+        // Process purchase
+        List<Order> orders = new ArrayList<>();
+        DAO dao = DAO.getInstance();
         for (String id : ids) {
             Course course = dao.getCourseById(id);
-            coursesPurchase.add(course);
-            cart.removeCourseToCart(course);
-        }  
-        boolean success = false;
-        
-        
-        
-        if (success){
-            session.setAttribute("selectedIds", null); 
-            response.sendRedirect("orders.jsp");
-        } else {
-            request.setAttribute("mes", "Fail to Purchase!");
-            request.getRequestDispatcher("checkout.jsp").forward(request, response);
+            if (course != null) {
+                Order order = new Order(course, 1, dao.generateRandomCode("activation"), null);
+                orders.add(order);
+                cart.removeCourseToCart(course);
+            }
         }
-        
-        
-        
-    }
 
+        // Insert orders into database
+        dao.insertTransaction(orders, user);
+
+        // Update cart in cookies
+        String cartData = dao.encode(cart);
+        Cookie cartCookie = new Cookie("cartC", cartData);
+        cartCookie.setMaxAge(60 * 60 * 24 * 7);
+        response.addCookie(cartCookie);
+
+        // Redirect to appropriate page
+        response.sendRedirect("orders.jsp");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
