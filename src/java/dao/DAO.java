@@ -396,52 +396,36 @@ public class DAO extends DBContext implements Serializable {
     //mới update
     public void insertTransaction(List<Order> listO, User user) {
         double total = 0;
-        DAO dao = instance;
-        for (Order o : listO) {
-            total += o.getCourse().getPrice() * o.getQuantity()*(1 - o.getCourse().getDiscount());
-        }
-        String transactionId = dao.generateRandomCode("transaction");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String sql1 = "INSERT INTO [dbo].[Transactions]\n"
-                + "           ([id]\n"
-                + "           ,[userId]\n"
-                + "           ,[date]\n"
-                + "           ,[totalPrice])\n"
-                + "     VALUES\n"
-                + "           (?,?,?,?)";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql1);
-            ps.setString(1, transactionId);
-            ps.setInt(2, user.getId());
-            ps.setString(3, dateFormat.format(new Date()));
-            ps.setDouble(4, total);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        for (Order o : listO) {
-            String activationCode = dao.generateRandomCode("activation");
-            String sql2 = "INSERT INTO [dbo].[Orders]\n"
-                    + "           ([courseId]\n"
-                    + "           ,[transactionId]\n"
-                    + "           ,[activationCode]\n"
-                    + "           ,[endDate]\n"
-                    + "           ,[quantity]\n"
-                    + "           ,[price])\n"
-                    + "     VALUES\n"
-                    + "           (?,?,?,?,?,?)";
-            try {
-                PreparedStatement ps = connection.prepareStatement(sql2);
-                ps.setString(1, o.getCourse().getId());
-                ps.setString(2, transactionId);
-                ps.setString(3, activationCode);
-                ps.setString(4, o.getEndDate());
-                ps.setInt(5, o.getQuantity());
-                ps.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
-                ps.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e);
+        String transactionId = generateRandomCode("transaction");
+        String sql1 = "INSERT INTO [dbo].[Transactions] ([id], [userId], [date], [totalPrice]) VALUES (?, ?, GETDATE(), ?)";
+        String sql2 = "INSERT INTO [dbo].[Orders] ([courseId], [transactionId], [activationCode], [endDate], [quantity], [price]) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps1 = connection.prepareStatement(sql1);
+             PreparedStatement ps2 = connection.prepareStatement(sql2)) {
+
+            for (Order o : listO) {
+                total += o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount());
             }
+
+            // Insert transaction record
+            ps1.setString(1, transactionId);
+            ps1.setInt(2, user.getId());
+            ps1.setDouble(3, total);
+            ps1.executeUpdate();
+
+            // Insert order records
+            for (Order o : listO) {
+                String activationCode = generateRandomCode("activation");
+                ps2.setString(1, o.getCourse().getId());
+                ps2.setString(2, transactionId);
+                ps2.setString(3, activationCode);
+                ps2.setString(4, o.getEndDate());
+                ps2.setInt(5, o.getQuantity());
+                ps2.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
+                ps2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
