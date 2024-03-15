@@ -416,7 +416,7 @@ public class DAO extends DBContext implements Serializable {
             ps.setString(3, dateFormat.format(new Date()));
             ps.setDouble(4, total);
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
         for (Order o : listO) {
@@ -434,12 +434,12 @@ public class DAO extends DBContext implements Serializable {
                 PreparedStatement ps = connection.prepareStatement(sql2);
                 ps.setString(1, o.getCourse().getId());
                 ps.setString(2, transactionId);
-                ps.setString(3, sql2);
+                ps.setString(3, activationCode);
                 ps.setString(4, o.getEndDate());
                 ps.setInt(5, o.getQuantity());
                 ps.setDouble(6, o.getCourse().getPrice() * o.getQuantity() * (1 - o.getCourse().getDiscount()));
                 ps.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e);
             }
         }

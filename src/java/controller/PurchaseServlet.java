@@ -63,7 +63,7 @@ public class PurchaseServlet extends HttpServlet {
         for (String id : ids) {
             Course course = dao.getCourseById(id);
             if (course != null) {
-                Order order = new Order(course, 1, dao.generateRandomCode("activation"), null);
+                Order order = new Order(course, 1, null, null);
                 orders.add(order);
                 cart.removeCourseToCart(course);
             }
