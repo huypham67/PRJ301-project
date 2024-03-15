@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dao.DAO;
-import jakarta.servlet.annotation.WebServlet;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
@@ -20,7 +19,6 @@ import java.util.ArrayList;
  *
  * @author Administrator
  */
-@WebServlet(name="DeleteProductServlet", urlPatterns={"/deleteProduct"})
 public class DeleteProductServlet extends HttpServlet {
    
     /** 
@@ -82,12 +80,13 @@ public class DeleteProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DAO dao = DAO.getInstance();
+        String test = request.getParameter("selectedIds");
+        String[] selectedIds = test.split(",");
         try{
-            String[] selectedOptions = request.getParameterValues("options[]");
-            if(selectedOptions == null){
+            if(selectedIds == null){
                 response.sendRedirect("manager");
             }
-            for (String selectedOption : selectedOptions) {
+            for (String selectedOption : selectedIds) {
                 dao.deleteCourseById(selectedOption);
             }
             response.sendRedirect("manager");

@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controller;
 
 import dao.DAO;
@@ -13,17 +8,25 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Order;
 
-@WebServlet(name="CancelOrderServlet", urlPatterns={"/cancel-order"})
-public class CancelOrderServlet extends HttpServlet {
+@WebServlet(name="ActiveCourseServlet", urlPatterns={"/activeCourse"})
+public class ActiveCourseServlet extends HttpServlet {
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String transactionCode = request.getParameter("tid");
-        String courseId = request.getParameter("pid");
         DAO dao = DAO.getInstance();
-        dao.cancelOrder(courseId, transactionCode);
-        response.sendRedirect("orders");
+        String activationCode = request.getParameter("activationCode");
+        Order o = dao.getOrderByActivationCode(activationCode);
+        if (o != null) {
+            dao.updateExpirationDay(activationCode);
+            request.setAttribute("mes", "Active course successfully.");
+            request.getRequestDispatcher("detail.jsp").forward(request, response);
+        } else {
+            request.setAttribute("mes", "This code is invalid. Please recheck your order.");
+            request.getRequestDispatcher("detail.jsp").forward(request, response);
+        }
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -40,26 +43,10 @@ public class CancelOrderServlet extends HttpServlet {
         processRequest(request, response);
     } 
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

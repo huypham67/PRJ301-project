@@ -184,6 +184,6 @@ public class Course implements Serializable {
     public static void main(String[] args) {
         Course c = new Course();
         c.setCid(1);
-        System.out.println(c.getCname());
+        //System.out.println(c.getCname());
     }
 }
