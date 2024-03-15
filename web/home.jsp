@@ -35,7 +35,7 @@
                 <div id="content" class="row">
                     <c:forEach items="${listP}" var="o">
                         <div class="col-12 col-md-6 col-lg-4" style="position: relative;">
-                            <div class="card" onmouseover="showPopup(this)">
+                            <div class="card" onmouseover="showPopup(this)" onmouseout="closePopup(this)">
                                 <img class="card-img-top" src="${o.image}" alt="Card image cap">
                                 <div class="card-body">
                                     <h4 class="card-title show_txt"><a href="detail?id=${o.id}" title="View Product">${o.name}</a></h4>
@@ -60,9 +60,6 @@
     </div>
 
     <jsp:include page="/includes/footer.jsp"/>
-
-    <div id="coursePopup" class="popup"></div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var categoryBlock = document.querySelector('.category_block');
@@ -76,30 +73,50 @@
             categoryBlock.parentNode.addEventListener('mouseout', function() {
                 categoryBlock.style.display = 'none';
             });
-        });      
-            
+        }); 
+        
+        function closePopup(element){
+            var popup = document.getElementById('coursePopup');
+            popup.style.display = 'none';
+        }
+        
         function showPopup(element) {
             var popup = document.getElementById('coursePopup');
-            var listP = JSON.parse(popup.getAttribute('data-listp'));
-            
+            var listP = [
+                <c:forEach items="${listP}" var="course" varStatus="loop">
+                    {
+                        id: "${course.id}",
+                        name: "${course.name}",
+                        price: ${course.price},
+                        cname: "${course.cname}",
+                        image: "${course.image}",
+                        description: "${course.description}",
+                        duration_month: ${course.duration_month},
+                        publicDate: "${course.publicDate}",
+                        discount: ${course.discount}
+                    }<c:if test="${not loop.last}">,</c:if>
+                </c:forEach>
+            ];
+
             if (element) {
-                var courseId = element.querySelector('.card-title a').getAttribute('href').split('=')[1];              
-                var courseFound = null;
-                
-                listP.forEach(function(item) {
-                    if (item.id === courseId) { 
-                        alert("Cặc");
-                        courseFound = item;
-                    }
+                var courseId = element.querySelector('.card-title a').getAttribute('href').split('=')[1]; 
+                var courseFound = listP.find(function(item) {
+                    return item.id === courseId;
                 });
 
                 if (courseFound) {
-                    // Hiển thị dữ liệu trong popup
-                    var content = `
-                        <h4>${courseFound.name}</h4>
-                        <p>${courseFound.price}</p>
-                        <p>${courseFound.cname}</p>
-                    `;
+                    var content = "<div class='course-info'>" +
+                        "<img src='" + courseFound.image + "' alt='" + courseFound.name + "'>" +
+                        "<div class='details'>" +
+                        "<h4>" + courseFound.name + "</h4>" +
+                        "<p><strong>Price:</strong> $" + courseFound.price + "</p>" +
+                        "<p><strong>Discount:</strong> $" + courseFound.discount + "</p>" +
+                        "<p><strong>Category:</strong> " + courseFound.cname + "</p>" +
+                        "<p><strong>Description:</strong> " + courseFound.description + "</p>" +
+                        "<p><strong>Duration:</strong> " + courseFound.duration_month + " months</p>" +
+                        "<p><strong>Public Date:</strong> " + courseFound.publicDate + "</p>" +
+                        "</div>" +
+                        "</div>";
 
                     popup.innerHTML = content;
                     popup.style.display = 'block';
@@ -121,7 +138,46 @@
                 console.error('Không thể tìm thấy dữ liệu');
             }
         }
-    </script>    
+
+    </script>
+    <div style="width: 300px; height: 600px" id="coursePopup" class="popup"></div> 
+    <style>
+        .popup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 999;
+        }
+
+        .course-info {
+            display: inline-block;
+        }
+
+        .course-info img {
+            border: 10px;
+            border-color: black;
+            width: 280px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .course-info .details {
+            flex: 1;
+        }
+
+        .course-info h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .course-info p {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+    </style>
     
 </body>
 </html>

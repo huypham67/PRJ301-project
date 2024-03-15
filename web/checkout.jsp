@@ -9,67 +9,69 @@
     <title>Check out page</title>
     <jsp:include page="includes/header.jsp"/>
     <jsp:include page="includes/navbar.jsp"/>
-    <style>
-        <!-- Your CSS styles here -->
-    </style>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/checkout.css">
 </head>
 <body>
     <jsp:include page="includes/formInfo.jsp"/>
-    <div style="display: flex;">
-        <div style="padding: 20px 70px;" class="container">
-            <table class="table table-light">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Discount</th>
-                        <th scope="col">Price</th> 
-                    </tr>
-                </thead>
-                <tbody>              
-                    <c:forEach items="${coursesToCheckout}" var="course" varStatus="loop">
-                        <tr>
-                            <td>${course.id}</td>
-                            <td>${course.name}</td>
-                            <td>
-                                <c:forEach items="${listC}" var="category">
-                                    <c:if test="${category.cid eq course.cid}">
-                                        ${category.cname}
-                                    </c:if>
-                                </c:forEach>
-                            </td>
-                            <td>
-                                <select name="quantity" id="quantity${loop.index}" onchange="clearAndUpdateOrderSummary()">
-                                    <c:forEach begin="0" end="1" var="i">
-                                        <option value="${i}">${i}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>
-                            <td>${course.discount}</td>
-                            <td>${course.price}</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-        <div style="padding: 20px 50px" class="col-xl-4">
-            <div class="mt-5 mt-lg-0">
-                <div class="card border shadow-none">
-                    <div class="card-header bg-transparent border-bottom py-3 px-4">
-                        <h5 class="font-size-16 mb-0">Order Summary <span class="float-end">#MN0124</span></h5>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="table-responsive">
+                    <table class="table table-light">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Discount</th>
+                                <th scope="col">Price</th> 
+                            </tr>
+                        </thead>
+                        <tbody>              
+                            <c:forEach items="${coursesToCheckout}" var="course" varStatus="loop">
+                                <tr>
+                                    <td><img src="${course.image}" alt="Course Image" width="100" height="50"></td>
+                                    <td>${course.id}</td>
+                                    <td>${course.name}</td>
+                                    <td>
+                                        <c:forEach items="${listC}" var="category">
+                                            <c:if test="${category.cid eq course.cid}">
+                                                ${category.cname}
+                                            </c:if>
+                                        </c:forEach>
+                                    </td>
+                                    <td>
+                                        <select name="quantity" id="quantity${loop.index}" onchange="clearAndUpdateOrderSummary()">
+                                            <c:forEach begin="0" end="1" var="i">
+                                                <option value="${i}">${i}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
+                                    <td>${course.discount}</td>
+                                    <td>${course.price}</td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Order Summary</h5>
                     </div>
-                    
-                    <div class="card-body p-4 pt-2">
+                    <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table mb-0">
+                            <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Discount</th>
-                                        <th scope="col">Subtotal</th>
+                                        <th>ID</th>
+                                        <th>Quantity</th>
+                                        <th>Discount</th>
+                                        <th>Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody id="orderSummaryBody">
@@ -83,95 +85,15 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <button onclick="purchase()">Purchase</button>
+                        <button class="btn btn-primary" onclick="purchase()">Purchase</button>
                     </div>
-                </div>                    
+                </div>
             </div>
-        </div>   
+        </div>
     </div>
 
-    <!-- Script section -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function updateOrderSummary() {
-            var total = 0;
-            var rows = document.querySelectorAll("tbody tr");
-
-            var orderSummaryBody = document.getElementById("orderSummaryBody");
-            orderSummaryBody.innerHTML = '';
-
-            rows.forEach(function(row, index) {
-                var id = row.querySelector("td:first-child").innerText; 
-                var quantity = parseInt(row.querySelector("select").value);
-                var price = parseFloat(row.querySelector("td:nth-child(6)").innerText);
-                var discount = parseFloat(row.querySelector("td:nth-child(5)").innerText);
-                var subtotal = (quantity * price) - discount;
-                total += subtotal;
-
-                // Add the data to the order summary table
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = '<td>' + id + '</td>' +
-                                   '<td>' + quantity + '</td>' +
-                                   '<td>' + discount.toFixed(2) + '</td>' +
-                                   '<td>' + subtotal.toFixed(2) + '</td>';
-                orderSummaryBody.appendChild(newRow);
-            });
-            
-            document.getElementById("totalPriceCell").innerText = total.toFixed(2);
-        }
-
-        function clearOrderSummary() {
-            var summaryRows = document.querySelectorAll("#orderSummaryBody tr");
-            summaryRows.forEach(function(row) {
-                row.remove();
-            });
-            document.getElementById("totalPriceCell").innerText = "0.00";
-        }
-
-        function clearAndUpdateOrderSummary() {
-            clearOrderSummary();
-            updateOrderSummary();
-        }
-        
-function purchase() {
-    var rows = document.querySelectorAll("#orderSummaryBody tr");
-    var selectedIds = [];
-
-    rows.forEach(function(row) {
-        var cells = row.querySelectorAll("td");
-        var id = cells[0].innerText;
-        var quantity = parseInt(cells[1].innerText);
-
-        if (quantity > 0) {
-            selectedIds.push(id);
-        }
-    });
-
-    var params = "selectedIds=" + selectedIds.join(",");
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "PurchaseServlet", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-            if (this.status == 200) {
-                alert("Purchase successful!");
-                window.location.href = "orders";
-            } else if (this.status == 400) {
-                alert("Bad request! Please try again");
-            } else if (this.status == 401) {
-                alert("Unauthorized! Please login" );             
-                window.location.href = "login";
-            } else {
-                alert("An error occurred while processing the purchase. Please contact to admin.");
-            }
-        }
-    };
-
-    xhttp.send(params);
-}
-
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script/checkout.js"></script>
 </body>
 </html>

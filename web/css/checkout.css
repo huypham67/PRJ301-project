@@ -1,5 +1,4 @@
-body{
-    margin-top:20px;
+body {
     background-color: #f1f3f7;
 }
 
@@ -9,7 +8,7 @@ body{
 }
 
 .font-size-18 {
-    font-size: 18px!important;
+    font-size: 18px !important;
 }
 
 .text-truncate {
@@ -19,7 +18,7 @@ body{
 }
 
 a {
-    text-decoration: none!important;
+    text-decoration: none !important;
 }
 
 .w-xl {
@@ -28,18 +27,9 @@ a {
 
 .card {
     margin-bottom: 24px;
-    -webkit-box-shadow: 0 2px 3px #e4e8f0;
     box-shadow: 0 2px 3px #e4e8f0;
-}
-
-.card {
     position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
@@ -49,3 +39,8 @@ a {
     border-radius: 1rem;
 }
 
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
