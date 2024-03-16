@@ -45,6 +45,10 @@
     background-color: #f8f9fa;
 }
 
+.navbar-search {
+    width: 300px; 
+    margin-right: 10px; 
+}
 
 @media (min-width: 767px) {
     .navbar .dropdown-toggle:not(.nav-link)::after {

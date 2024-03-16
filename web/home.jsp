@@ -49,7 +49,7 @@
 
             #coursePopup {
                 width: 300px;
-                height: 500px;
+                height: 600px;
             }
         </style>
     </head>
@@ -77,7 +77,7 @@
                     <div id="content" class="row">
                         <c:forEach items="${listP}" var="o">
                             <div class="col-12 col-md-6 col-lg-4" style="position: relative;">
-                                <div class="card" onmouseover="showPopup(this)">
+                                <div class="card" onmouseover="showPopup(this)" onmouseout="closePopup(this)">
                                     <img class="card-img-top" src="${o.image}" alt="Card image cap">
                                     <div class="card-body">
                                         <h4 class="card-title show_txt"><a href="detail?id=${o.id}" title="View Product">${o.name}</a></h4>
@@ -122,7 +122,12 @@
                     categoryBlock.style.display = 'none';
                 });
             });
-
+            
+            function closePopup(element){
+                var popup = document.getElementById('coursePopup');
+                popup.style.display = 'none';
+            }
+            
             function showPopup(element) {
                 var popup = document.getElementById('coursePopup');
                 var listP = [
@@ -135,7 +140,6 @@
                             image: "${course.image}",
                             description: "${course.description}",
                             duration_month: ${course.duration_month},
-                            cid: ${course.cid},
                             publicDate: "${course.publicDate}",
                             discount: ${course.discount}
                         }<c:if test="${not loop.last}">,</c:if>
@@ -158,7 +162,6 @@
                             "<p><strong>Category:</strong> " + courseFound.cname + "</p>" +
                             "<p><strong>Description:</strong> " + courseFound.description + "</p>" +
                             "<p><strong>Duration:</strong> " + courseFound.duration_month + " months</p>" +
-                            "<p><strong>Category ID:</strong> " + courseFound.cid + "</p>" +
                             "<p><strong>Public Date:</strong> " + courseFound.publicDate + "</p>" +
                             "</div>" +
                             "</div>";

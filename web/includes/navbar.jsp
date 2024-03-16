@@ -41,7 +41,7 @@
             </li>
         </ul>
         <form class="form-inline mt-2 mt-md-0" action="search" method="post">
-            <input class="form-control mr-sm-2" type="text" name="txt" value="${txtS}" placeholder="<fmt:message key='navbar.search' bundle='${langSet}'/>" aria-label="Search">
+            <input style="margin: 5px 5px 0 0 !important" class="form-control mr-sm-2 navbar-search" type="text" name="txt" value="${txtS}" placeholder="<fmt:message key='navbar.search' bundle='${langSet}'/>" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><fmt:message key="navbar.search" bundle="${langSet}"/></button>
             <a class="btn btn-success btn-sm ml-3" href="cart">
                 <i class="fa fa-shopping-cart"></i> <fmt:message key="navbar.cart" bundle="${langSet}"/>
