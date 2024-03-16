@@ -35,6 +35,27 @@ public class CheckOutServlet extends HttpServlet {
 
             request.setAttribute("coursesToCheckout", coursesToCheckout.getCartList().keySet()); // Thay đổi ở đây
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
+        } else {
+            // Lấy danh sách ID được lưu trong session
+            String[] selectedIds = (String[]) session.getAttribute("selectedIds");
+            if (selectedIds != null) {
+                Cart cart = getCartFromCookie(request);
+                for (String id : selectedIds) {
+                    Course course = dao.getCourseById(id);
+                    if (course != null && cart.getCartList().containsKey(course)) {
+                        coursesToCheckout.addCourseToCart(course, 1);
+                    }
+                }
+
+                List<Category> listC = dao.getAllCategories();
+                request.setAttribute("listC", listC);
+
+                request.setAttribute("coursesToCheckout", coursesToCheckout.getCartList().keySet()); // Thay đổi ở đây
+
+                request.getRequestDispatcher("checkout.jsp").forward(request, response);
+            } else {
+                response.sendRedirect("cart");
+            }
         }
     }
 
