@@ -5,6 +5,7 @@
 <%@include file="/includes/language.jsp"%>
 <link rel="stylesheet" href="css/navbar.css"/>
 <script src="script/language.js"></script>
+
 <div class="navbar navbar-expand-md navbar-dark bg-dark mb-4" style="margin-bottom: 0px !important;" role="navigation">
     <a class="navbar-brand" href="home"><fmt:message key="navbar.company" bundle="${langSet}"/></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,8 +36,8 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropdown2-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><fmt:message key="navbar.language" bundle="${langSet}"/></a>
                 <ul class="dropdown-menu" aria-labelledby="dropdown2-1">
-                    <li class="dropdown-item"><a href="#" id="englishLink" onclick="updateLanguage('en_US')"><fmt:message key="navbar.english" bundle="${langSet}"/></a></li>
-                    <li class="dropdown-item"><a href="#" id="vietnameseLink" onclick="updateLanguage('vi_VN')"><fmt:message key="navbar.vietnamese" bundle="${langSet}"/></a></li>
+                    <li class="dropdown-item"><a id="englishLink" href="#" onclick="updateLanguage('en_US')"><fmt:message key="navbar.english" bundle="${langSet}"/></a></li>
+                    <li class="dropdown-item"><a id="vietnameseLink" href="#" onclick="updateLanguage('vi_VN')"><fmt:message key="navbar.vietnamese" bundle="${langSet}"/></a></li>
                 </ul>
             </li>
         </ul>
@@ -71,17 +72,19 @@
         </form>
     </div>
 </div>
-    <script>
-        $(document).ready(function() {
-            var prevScrollpos = window.pageYOffset;
-            $(window).scroll(function() {
-                var currentScrollPos = window.pageYOffset;
-                if (prevScrollpos > currentScrollPos || currentScrollPos === 0) {
-                    $(".navbar").removeClass("hidden");
-                } else {
-                    $(".navbar").addClass("hidden"); 
-                }
-                prevScrollpos = currentScrollPos;
-            });
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var prevScrollpos = window.pageYOffset;
+        window.addEventListener("scroll", function() {
+            var currentScrollPos = window.pageYOffset;
+            var navbar = document.querySelector(".navbar");
+            if (prevScrollpos > currentScrollPos || currentScrollPos === 0) {
+                navbar.classList.remove("hidden");
+            } else {
+                navbar.classList.add("hidden");
+            }
+            prevScrollpos = currentScrollPos;
         });
-    </script>
+    });
+</script>

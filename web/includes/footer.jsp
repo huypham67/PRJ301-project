@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- Footer -->
 <%@include file="../includes/language.jsp" %>
-<link rel="stylesheet" href="/css/footer.css"/>
+<link rel="stylesheet" href="../css/footer.css"/>
 <footer class="text-light">
     <div class="container">
         <div class="row">

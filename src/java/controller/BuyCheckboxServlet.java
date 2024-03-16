@@ -18,7 +18,7 @@ public class BuyCheckboxServlet extends HttpServlet {
         
         if (selectedIds != null ) {
             session.setAttribute("selectedIds", selectedIds); 
-            response.sendRedirect("checkout.jsp");
+            response.sendRedirect("checkout");
         } else {
             request.setAttribute("mes", "Have some error for checkout for you. Please contact with Fanpage.");
             response.sendRedirect("cart.jsp");

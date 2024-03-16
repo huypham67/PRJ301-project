@@ -1,5 +1,4 @@
 package controller;
-
 import dao.DAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -16,34 +15,16 @@ import model.Cart;
 import model.Category;
 import model.Course;
 
-@WebServlet(name = "CheckOutServlet", urlPatterns = {"/checkout"})
+@WebServlet(name="CheckOutServlet", urlPatterns={"/checkout"})
 public class CheckOutServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         DAO dao = DAO.getInstance();
         HttpSession session = request.getSession();
         Cart coursesToCheckout = new Cart();
 
-        //order trực tiếp
-        String courseId = request.getParameter("id");
-        if (courseId != null) {
-            Course c = dao.getCourseById(courseId);
-            coursesToCheckout.addCourseToCart(c, 1);
-            List<Category> listC = dao.getAllCategories();
-            request.setAttribute("listC", listC);
-
-            request.setAttribute("coursesToCheckout", coursesToCheckout.getCartList().keySet()); // Thay đổi ở đây
-            request.getRequestDispatcher("checkout.jsp").forward(request, response);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DAO dao = DAO.getInstance();
-        HttpSession session = request.getSession();
-        Cart coursesToCheckout = new Cart();
         // Lấy danh sách ID được lưu trong session
         String[] selectedIds = (String[]) session.getAttribute("selectedIds");
         if (selectedIds != null) {
@@ -51,9 +32,12 @@ public class CheckOutServlet extends HttpServlet {
             for (String id : selectedIds) {
                 Course course = dao.getCourseById(id);
                 if (course != null && cart.getCartList().containsKey(course)) {
+                    coursesToCheckout.addCourseToCart(course, 1);                
+                }
+                if (course != null && !cart.getCartList().containsKey(course)){
                     coursesToCheckout.addCourseToCart(course, 1);
                 }
-            }
+            }           
 
             List<Category> listC = dao.getAllCategories();
             request.setAttribute("listC", listC);
@@ -62,8 +46,21 @@ public class CheckOutServlet extends HttpServlet {
 
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
         } else {
-            response.sendRedirect("cart.jsp");
-        }
+            response.sendRedirect("cart.jsp");        }
+
+    }     
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+            processRequest(request, response);
+    }    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+            processRequest(request, response);
+    }    @Override
+    public String getServletInfo() {
+        return "Short description";
     }
 
     private Cart getCartFromCookie(HttpServletRequest request) throws IOException {

@@ -1,6 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@include file="/includes/language.jsp" %>
-<link rel="stylesheet" href="/css/left.css"/>
+<link rel="stylesheet" href="../css/left.css"/>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div class="col-sm-3">
     <div class="card bg-light mb-3">
