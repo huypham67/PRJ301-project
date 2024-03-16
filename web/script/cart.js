@@ -58,8 +58,8 @@ function removeSelected() {
         var params = "selectedIds=" + encodeURIComponent(ids.join(","));
         xhttp.onreadystatechange = function() {
             if (this.readyState === 4 && this.status === 200) {
-                alert("Deleted Successfully!");
-                location.reload()
+                alert("Deleted Successfully!");               
+                location.reload();
             }
         };
         xhttp.send(params); 

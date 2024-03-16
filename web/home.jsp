@@ -10,54 +10,6 @@
         <title><fmt:message key="home.title" bundle="${langSet}"/></title>
         <jsp:include page="/includes/header.jsp" />   
         <link rel="stylesheet" href="css/home.css"/>
-        <style>
-            .popup {
-                position: absolute;
-                background-color: white;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                padding: 10px;
-                z-index: 999;
-            }
-
-            .course-info {
-                display: inline-block;
-            }
-
-            .course-info img {
-                border: 10px;
-                border-color: black;
-                width: 280px;
-                height: auto;
-                margin-right: 10px;
-            }
-
-            .course-info .details {
-                flex: 1;
-            }
-
-            .course-info h4 {
-                margin-top: 0;
-                margin-bottom: 10px;
-            }
-
-            .course-info p {
-                margin-top: 0;
-                margin-bottom: 5px;
-            }
-
-            #coursePopup {
-                width: 300px;
-                height: 600px;
-            }
-            
-            @media screen and (max-width: 768px) {
-                .popup {
-                    display: none !important;
-                }
-            }
-        </style>
     </head>
     <body>
         <jsp:include page="/includes/navbar.jsp" />
@@ -112,90 +64,194 @@
 
         <jsp:include page="/includes/footer.jsp"/>
         
+        <div style="width: 300px; height: 600px" id="activePopup" class="popup" style="display: none;">        
+            <div class='course-info'>
+                <img src='' alt=''>
+                <div class='details'>
+                    <h4 id="activeCourseName"></h4>
+
+                    <!-- Form -->
+                    <form id="activateCourseForm" action="ActiveServlet" method="post">
+                        <input type="hidden" id="activeCourseId" name="courseId">
+                        <label for="activeCourseText"><fmt:message key="home.card.enter_activation_key" bundle="${langSet}"/>:</label>
+                        <input type="text" id="activeCourseText" name="activeCourseText">
+                        <button type="submit" class="btn btn-primary"><fmt:message key="home.card.activate" bundle="${langSet}"/></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      
         <div id="coursePopup" class="popup"></div> 
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var categoryBlock = document.querySelector('.category_block');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var categoryBlock = document.querySelector('.category_block');
+            categoryBlock.style.display = 'none';
+            // Hiển thị danh sách danh mục khi trỏ chuột vào
+            categoryBlock.parentNode.addEventListener('mouseover', function () {
+                categoryBlock.style.display = 'block';
+            });
+
+            // Ẩn danh sách danh mục khi trỏ chuột ra ngoài
+            categoryBlock.parentNode.addEventListener('mouseout', function () {
                 categoryBlock.style.display = 'none';
-                // Hiển thị danh sách danh mục khi trỏ chuột vào
-                categoryBlock.parentNode.addEventListener('mouseover', function () {
-                    categoryBlock.style.display = 'block';
+            });
+
+            var popup = document.getElementById('coursePopup');
+            var activePopup = document.getElementById('activePopup');
+
+            // Thêm sự kiện để ngừng đếm ngược khi người dùng trỏ chuột vào popup
+            popup.addEventListener('mouseenter', function() {
+                clearTimeout(popupTimer); // Xóa timeout nếu có
+            });
+
+            // Thêm sự kiện để đóng popup khi người dùng rời khỏi popup
+            popup.addEventListener('mouseleave', closePopupImmediately);
+        });
+
+        var popupTimer; // Biến để lưu trữ đối tượng timeout
+
+        var listP = [
+            <c:forEach items="${listP}" var="course" varStatus="loop">
+                {
+                    id: "${course.id}",
+                    name: "${course.name}",
+                    price: ${course.price},
+                    cname: "${course.cname}",
+                    image: "${course.image}",
+                    description: "${course.description}",
+                    duration_month: ${course.duration_month},
+                    publicDate: "${course.publicDate}",
+                    discount: ${course.discount}
+                }<c:if test="${not loop.last}">,</c:if>
+            </c:forEach>
+        ];
+        function showPopup(element) {
+            clearTimeout(popupTimer);
+
+            var popup = document.getElementById('coursePopup');
+            if (element) {
+                var courseId = element.querySelector('.card-title a').getAttribute('href').split('=')[1];
+                var courseFound = listP.find(function(item) {
+                    return item.id === courseId;
                 });
 
-                // Ẩn danh sách danh mục khi trỏ chuột ra ngoài
-                categoryBlock.parentNode.addEventListener('mouseout', function () {
-                    categoryBlock.style.display = 'none';
-                });
-            });
-            
-            function closePopup(element){
+                if (courseFound) {
+                    var content = "<div class='course-info'>" +
+                        "<img src='" + courseFound.image + "' alt='" + courseFound.name + "'>" +
+                        "<div class='details'>" +
+                        "<h4>" + courseFound.name + "</h4>" +
+                        "<p><strong>Price:</strong> $" + courseFound.price + "</p>" +
+                        "<p><strong>Discount:</strong> $" + courseFound.discount + "</p>" +
+                        "<p><strong>Category:</strong> " + courseFound.cname + "</p>" +
+                        "<p><strong>Description:</strong> " + courseFound.description + "</p>" +
+                        "<p><strong>Duration:</strong> " + courseFound.duration_month + " months</p>" +
+                        "<p><strong>Public Date:</strong> " + courseFound.publicDate + "</p>" +
+                        "<p>If you have key:</p>"+
+                        "<button class='btn btn-primary' onclick='openActivePopup(\"" + courseId + "\")'>Active this Course</button>"+
+                        "</div>" +
+                        "</div>";
+
+                    popup.innerHTML = content;
+                    popup.style.display = 'block';
+                    var rect = element.getBoundingClientRect();
+                    var popupWidth = popup.offsetWidth;
+                    var leftPos = rect.left + window.pageXOffset + rect.width + 10; 
+                    var screenWidth = window.innerWidth;
+
+                    if (leftPos + popupWidth > screenWidth) { 
+                        leftPos = rect.left - popupWidth - 10;
+                    }
+
+                    // Set the position of the popup
+                    var topPos = rect.top + window.pageYOffset;
+                    popup.style.top = topPos + 'px';
+                    popup.style.left = leftPos + 'px';
+
+                    // Thêm sự kiện để theo dõi khi người dùng rời khỏi course
+                    element.addEventListener('mouseleave', closePopupWithDelay);
+                } else {
+                    console.error('Không tìm thấy khóa học với ID: ' + courseId);
+                }
+            } else {
+                console.error('Không thể tìm thấy dữ liệu');
+            }
+        }
+
+        // Function để đóng popup khi người dùng rời khỏi course
+        function closePopupWithDelay() {
+            popupTimer = setTimeout(function() {
                 var popup = document.getElementById('coursePopup');
                 popup.style.display = 'none';
-            }
-            
-            function showPopup(element) {
-                var popup = document.getElementById('coursePopup');
-                var listP = [
-                    <c:forEach items="${listP}" var="course" varStatus="loop">
-                        {
-                            id: "${course.id}",
-                            name: "${course.name}",
-                            price: ${course.price},
-                            cname: "${course.cname}",
-                            image: "${course.image}",
-                            description: "${course.description}",
-                            duration_month: ${course.duration_month},
-                            publicDate: "${course.publicDate}",
-                            discount: ${course.discount}
-                        }<c:if test="${not loop.last}">,</c:if>
-                    </c:forEach>
-                ];
+            }, 500);
+        }
 
-                if (element) {
-                    var courseId = element.querySelector('.card-title a').getAttribute('href').split('=')[1]; 
-                    var courseFound = listP.find(function(item) {
-                        return item.id === courseId;
-                    });
+        function closePopupImmediately() {
+            clearTimeout(popupTimer);
+            var popup = document.getElementById('coursePopup');
+            popup.style.display = 'none';
+        }
 
-                    if (courseFound) {
-                        var content = "<div class='course-info'>" +
-                            "<img src='" + courseFound.image + "' alt='" + courseFound.name + "'>" +
-                            "<div class='details'>" +
-                            "<h4>" + courseFound.name + "</h4>" +
-                            "<p><strong>Price:</strong> $" + courseFound.price + "</p>" +
-                            "<p><strong>Discount:</strong> $" + courseFound.discount + "</p>" +
-                            "<p><strong>Category:</strong> " + courseFound.cname + "</p>" +
-                            "<p><strong>Description:</strong> " + courseFound.description + "</p>" +
-                            "<p><strong>Duration:</strong> " + courseFound.duration_month + " months</p>" +
-                            "<p><strong>Public Date:</strong> " + courseFound.publicDate + "</p>" +
-                            "</div>" +
-                            "</div>";
+        function openActivePopup(courseId) {
+            var activePopup = document.getElementById('activePopup');
+            activePopup.style.display = 'block';
 
-                        popup.innerHTML = content;
-                        popup.style.display = 'block';
+            var courseFound = listP.find(function(item) {
+                return item.id === courseId;
+            });
 
-                        // Determine whether to show popup to the left or right of the course card
-                        var rect = element.getBoundingClientRect();
-                        var popupWidth = popup.offsetWidth;
-                        var leftPos = rect.left + window.pageXOffset + rect.width + 10; // 10 is just a padding value
-                        var screenWidth = window.innerWidth;
+            // Tạo nội dung cho activePopup
+            var content = "<div class='course-info'>" +
+                "<button id=\"closePopupButton\" onclick=\"closePopupInActive()\"></button>" +
+                "<img src='" + courseFound.image + "' alt='" + courseFound.name + "'>" +
+                "<div class='details'>" +
+                "<h4>" + courseFound.name + "</h4>" +
+                "<p><strong>Price:</strong> $" + courseFound.price + "</p>" +
+                "<p><strong>Discount:</strong> $" + courseFound.discount + "</p>" +
+                "<p><strong>Category:</strong> " + courseFound.cname + "</p>" +
+                "<p><strong>Description:</strong> " + courseFound.description + "</p>" +
+                "<p><strong>Duration:</strong> " + courseFound.duration_month + " months</p>" +
+                "<p><strong>Public Date:</strong> " + courseFound.publicDate + "</p>" +
+                "<input type='text' id='activeCourseKey' name='activeCourseKey'>" +
+                "<button id='activateCourseBtn' class='btn btn-primary'>Activate Course</button>"+
+                "</div>" +
+                "</div>";
 
-                        if (leftPos + popupWidth > screenWidth) { // If popup goes beyond screen width, show it on the left
-                            leftPos = rect.left - popupWidth - 10; // Adjusting for a small gap
-                        }
+            activePopup.innerHTML = content;
 
-                        // Set the position of the popup
-                        var topPos = rect.top + window.pageYOffset;
-                        popup.style.top = topPos + 'px';
-                        popup.style.left = leftPos + 'px';
-                    } else {
-                        console.error('Không tìm thấy khóa học với ID: ' + courseId);
-                    }
+            document.getElementById('activateCourseBtn').addEventListener('click', function() {
+                var activeCourseKey = document.getElementById('activeCourseKey').value;
+                if (activeCourseKey.trim() === '') {
+                    alert('Please enter the activation key.');
                 } else {
-                    console.error('Không thể tìm thấy dữ liệu');
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {
+                                alert("Course activated successfully!");
+                                window.location.href = "detail?id=" + courseFound.id;
+                            } else if (this.status == 400) {
+                                alert("This code is invalid or missing!");
+                            } else if (this.status == 401) {
+                                alert("Unauthorized! Please login");
+                                window.location.href = "login";
+                            } else {
+                                alert("An error occurred while processing the activation. Please try again later.");
+                            }
+                        }
+                    };
+                    xhttp.open("POST", "activeCourse", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    var courseId = encodeURIComponent(courseId);
+                    xhttp.send("id=" + courseId + "&key=" + encodeURIComponent(activeCourseKey));
                 }
-            }
-        </script>
+            });
+        }
+
+        function closePopupInActive() {
+            var popup = document.getElementById("activePopup");
+            popup.style.display = "none";
+        }
+    </script>
     </body>
 </html>

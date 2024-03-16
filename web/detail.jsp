@@ -102,9 +102,15 @@
                                 </aside> <!-- col.// -->
                             </div> <!-- row.// -->
                         </div> <!-- card.// -->
-
-
                     </div>
+                <div id="notification" style="display: none;">
+                    <c:if test="${not empty mes}">
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <strong>${mes}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                </div>                    
                 </div>
             </div>
         </div>
