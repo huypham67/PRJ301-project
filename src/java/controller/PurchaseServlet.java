@@ -65,7 +65,9 @@ public class PurchaseServlet extends HttpServlet {
                 Course course = dao.getCourseById(id);
                 Order o = new Order(course, 1);
                 orders.add(o);
-                cart.removeCourseToCart(course);
+                if (cart.getCartList().containsKey(course)){
+                    cart.removeCourseToCart(course);
+                }
             }
         }
 

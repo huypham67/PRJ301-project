@@ -1,4 +1,5 @@
 package controller;
+
 import dao.DAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -32,12 +33,13 @@ public class CheckOutServlet extends HttpServlet {
             for (String id : selectedIds) {
                 Course course = dao.getCourseById(id);
                 if (course != null && cart.getCartList().containsKey(course)) {
-                    coursesToCheckout.addCourseToCart(course, 1);                
+                    coursesToCheckout.addCourseToCart(course, 1);
                 }
                 if (course != null && !cart.getCartList().containsKey(course)){
                     coursesToCheckout.addCourseToCart(course, 1);
                 }
-            }           
+                
+            }
 
             List<Category> listC = dao.getAllCategories();
             request.setAttribute("listC", listC);
@@ -46,19 +48,23 @@ public class CheckOutServlet extends HttpServlet {
 
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
         } else {
-            response.sendRedirect("cart.jsp");        }
+            response.sendRedirect("cart.jsp");
+        }
+    }
 
-    }     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
             processRequest(request, response);
-    }    
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
             processRequest(request, response);
-    }    @Override
+    }
+
+    @Override
     public String getServletInfo() {
         return "Short description";
     }
@@ -80,3 +86,5 @@ public class CheckOutServlet extends HttpServlet {
         return cart;
     }
 }
+
+
