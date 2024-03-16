@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet("/PurchaseServlet")
+@WebServlet("/purchase")
 public class PurchaseServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class PurchaseServlet extends HttpServlet {
         for (String id : ids) {
             Course course = dao.getCourseById(id);
             if (course != null) {
-                Order order = new Order(course, 1, null, null);
+                Order order = new Order(course, 1);
                 orders.add(order);
                 cart.removeCourseToCart(course);
             }

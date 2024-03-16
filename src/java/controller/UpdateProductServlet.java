@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package controller;
 
 import dao.DAO;
@@ -60,13 +55,6 @@ public class UpdateProductServlet extends HttpServlet {
         
     } 
 
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -80,11 +68,6 @@ public class UpdateProductServlet extends HttpServlet {
         int cid = Integer.parseInt(request.getParameter("category"));
         String publicDate = request.getParameter("publicDate")+":00.000";
         double discount= (double) Double.parseDouble(request.getParameter("discount"))/100;
-        
-        if(!isValidUrl(image)){
-//            image = "https://i.imgur.com/mYIzrwF.jpeg";
-            image = "https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg";
-        }
         try{
             DAO dao = DAO.getInstance();
             Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, discount);

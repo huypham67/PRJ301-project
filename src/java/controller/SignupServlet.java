@@ -33,15 +33,13 @@ public class SignupServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        DAO dao = DAO.getInstance();
         String email = request.getParameter("email");
-        String pass = request.getParameter("password");
-        String cf_pass = request.getParameter("confirm-password");
-        if (!pass.equals(cf_pass)) {
-            response.sendRedirect("login.jsp");
-        } else {
-            DAO dao = DAO.getInstance();
-            User a = dao.login(email, pass);
-            if (a != null) {
+        boolean existed = dao.checkExistedEmail(email);
+        if (!existed) { //email chưa tồn tại
+            String pass = request.getParameter("password");
+            String cf_pass = request.getParameter("confirm-password");
+            if (!pass.equals(cf_pass)) {
                 response.sendRedirect("login.jsp");
             } else {
                 String fullName = request.getParameter("fullName");
@@ -50,8 +48,12 @@ public class SignupServlet extends HttpServlet {
                 dao.signUp(fullName, address, phoneNumber, email, pass);
                 response.sendRedirect("home");
             }
-
         }
+        else {
+            request.setAttribute("mes", "Email is existed.");
+            response.sendRedirect("login.jsp");
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -26,7 +26,6 @@ public class SearchServlet extends HttpServlet {
         request.setAttribute("listP", listP);
         request.setAttribute("listC", listC);
         request.setAttribute("lastP", lastP);
-        request.setAttribute("txtS", txtS);
         request.getRequestDispatcher("home.jsp").forward(request, response);
     } 
     @Override

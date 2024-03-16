@@ -15,15 +15,16 @@ import model.Course;
 
 @WebServlet("/deleteSelected")
 public class DeleteCheckboxServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String test = request.getParameter("selectedIds");
-        String[] selectedIds = test.split(",");
-        
+        String[] selectedIds = test.split(","); //danh sách các id đã tick
+
         if (selectedIds != null && selectedIds.length > 0) {
             DAO dao = DAO.getInstance();
             Cookie[] cookies = request.getCookies();
-            Cart cart = null;
+            Cart cart = new Cart();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("cartC")) {
@@ -46,10 +47,7 @@ public class DeleteCheckboxServlet extends HttpServlet {
                 cartCookie.setMaxAge(60 * 60 * 24 * 7);
                 response.addCookie(cartCookie);
             }
-
-            response.sendRedirect("cart.jsp");
-        } else {
-            response.sendRedirect("cart.jsp");
         }
+        response.sendRedirect("cart.jsp");
     }
 }

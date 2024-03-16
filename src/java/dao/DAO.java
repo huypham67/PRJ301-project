@@ -499,4 +499,18 @@ public class DAO extends DBContext implements Serializable {
         dao.cancelOrder("MD102", "7HFquVZstt");
     }
 
+    public boolean checkExistedEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next())
+                return true; //đã tồn tại
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
 }

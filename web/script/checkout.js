@@ -56,7 +56,7 @@ function purchase() {
     var params = "selectedIds=" + selectedIds.join(",");
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "PurchaseServlet", true);
+    xhttp.open("POST", "purchase", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     xhttp.onreadystatechange = function() {
