@@ -17,7 +17,7 @@
                 <h5><fmt:message key="footer.information" bundle="${langSet}" /></h5>
                 <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
                 <ul class="list-unstyled">
-                    <li><a href="">Link 1</a></li>
+                    <li><a href="https://www.facebook.com/huyaty.2003/" target="_blank">Hoàng Huy</a></li>
                     <li><a href="">Link 2</a></li>
                     <li><a href="">Link 3</a></li>
                     <li><a href="">Link 4</a></li>
@@ -28,7 +28,7 @@
                 <h5><fmt:message key="footer.others_links" bundle="${langSet}" /></h5>
                 <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
                 <ul class="list-unstyled">
-                    <li><a href="">Link 1</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=ngbqjNPSMQk" target="_blank">Dành Hết Xuân Thì Để Chờ Nhau (Official MV)</a></li>
                     <li><a href="">Link 2</a></li>
                     <li><a href="">Link 3</a></li>
                     <li><a href="">Link 4</a></li>
@@ -42,6 +42,8 @@
                     <li><i class="fa fa-home mr-2"></i> Group 5</li>
                     <li><i class="fa fa-envelope mr-2"></i> huypdnde170173@fpt.edu.vn</li>
                     <li><i class="fa fa-phone mr-2"></i> + 84941121748</li>
+                    <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=huyhdde170024@fpt.edu.vn" class="fa fa-envelope mr-2" target="_blank"> huyhdde170024@fpt.edu.vn</a></li>
+                    <li><a href="tel:+84373702796" target="_blank" class="fa fa-print mr-2"> +84373702796</a></li>
                     <li><i class="fa fa-print mr-2"></i> + 33 12 14 15 16</li>
                 </ul>
             </div>

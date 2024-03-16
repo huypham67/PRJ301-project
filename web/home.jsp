@@ -51,6 +51,12 @@
                 width: 300px;
                 height: 600px;
             }
+            
+            @media screen and (max-width: 768px) {
+                .popup {
+                    display: none !important;
+                }
+            }
         </style>
     </head>
     <body>
@@ -169,14 +175,18 @@
                         popup.innerHTML = content;
                         popup.style.display = 'block';
 
-                        // Xác định vị trí của popup
+                        // Determine whether to show popup to the left or right of the course card
                         var rect = element.getBoundingClientRect();
-                        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-                        var topPos = rect.top + scrollTop;
-                        var leftPos = rect.left + scrollLeft + rect.width;
+                        var popupWidth = popup.offsetWidth;
+                        var leftPos = rect.left + window.pageXOffset + rect.width + 10; // 10 is just a padding value
+                        var screenWidth = window.innerWidth;
 
-                        // Đặt vị trí của popup bên cạnh khóa học
+                        if (leftPos + popupWidth > screenWidth) { // If popup goes beyond screen width, show it on the left
+                            leftPos = rect.left - popupWidth - 10; // Adjusting for a small gap
+                        }
+
+                        // Set the position of the popup
+                        var topPos = rect.top + window.pageYOffset;
                         popup.style.top = topPos + 'px';
                         popup.style.left = leftPos + 'px';
                     } else {
