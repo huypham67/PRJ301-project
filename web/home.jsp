@@ -99,7 +99,7 @@
                                         </c:if>
                                         <div class="mt-3 d-flex justify-content-between">
                                             <a class="btn btn-dark" href="add-to-cart?id=${o.id}&quantity=1"><fmt:message key="home.card.add_to_cart" bundle="${langSet}"/></a> 
-                                            <a class="btn btn-danger" href="order-now?id=${o.id}&quantity=1"><fmt:message key="home.card.buy_now" bundle="${langSet}"/></a>
+                                            <a class="btn btn-danger" href="checkout?id=${o.id}&quantity=1"><fmt:message key="home.card.buy_now" bundle="${langSet}"/></a>
                                         </div>
                                     </div>
                                 </div>

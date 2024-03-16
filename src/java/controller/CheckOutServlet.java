@@ -25,7 +25,19 @@ public class CheckOutServlet extends HttpServlet {
         DAO dao = DAO.getInstance();
         HttpSession session = request.getSession();
         Cart coursesToCheckout = new Cart();
+        
+        //order trực tiếp
+        String courseId = request.getParameter("id");
+        if (courseId != null) {
+            Course c = dao.getCourseById(courseId);
+            coursesToCheckout.addCourseToCart(c, 1);
+            List<Category> listC = dao.getAllCategories();
+            request.setAttribute("listC", listC);
 
+            request.setAttribute("coursesToCheckout", coursesToCheckout.getCartList().keySet()); // Thay đổi ở đây
+            request.getRequestDispatcher("checkout.jsp").forward(request, response);
+        }
+        
         // Lấy danh sách ID được lưu trong session
         String[] selectedIds = (String[]) session.getAttribute("selectedIds");
         if (selectedIds != null) {
