@@ -16,16 +16,15 @@ import model.Cart;
 import model.Category;
 import model.Course;
 
-@WebServlet(name="CheckOutServlet", urlPatterns={"/checkout"})
+@WebServlet(name = "CheckOutServlet", urlPatterns = {"/checkout"})
 public class CheckOutServlet extends HttpServlet {
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         DAO dao = DAO.getInstance();
         HttpSession session = request.getSession();
         Cart coursesToCheckout = new Cart();
-        
+
         //order trực tiếp
         String courseId = request.getParameter("id");
         if (courseId != null) {
@@ -37,7 +36,14 @@ public class CheckOutServlet extends HttpServlet {
             request.setAttribute("coursesToCheckout", coursesToCheckout.getCartList().keySet()); // Thay đổi ở đây
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
         }
-        
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        DAO dao = DAO.getInstance();
+        HttpSession session = request.getSession();
+        Cart coursesToCheckout = new Cart();
         // Lấy danh sách ID được lưu trong session
         String[] selectedIds = (String[]) session.getAttribute("selectedIds");
         if (selectedIds != null) {
@@ -47,9 +53,8 @@ public class CheckOutServlet extends HttpServlet {
                 if (course != null && cart.getCartList().containsKey(course)) {
                     coursesToCheckout.addCourseToCart(course, 1);
                 }
-            }           
-            
-            
+            }
+
             List<Category> listC = dao.getAllCategories();
             request.setAttribute("listC", listC);
 
@@ -59,24 +64,6 @@ public class CheckOutServlet extends HttpServlet {
         } else {
             response.sendRedirect("cart.jsp");
         }
-
-    } 
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
     }
 
     private Cart getCartFromCookie(HttpServletRequest request) throws IOException {

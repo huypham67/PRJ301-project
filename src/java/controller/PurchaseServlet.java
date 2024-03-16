@@ -61,10 +61,10 @@ public class PurchaseServlet extends HttpServlet {
         List<Order> orders = new ArrayList<>();
         DAO dao = DAO.getInstance();
         for (String id : ids) {
-            Course course = dao.getCourseById(id);
-            if (course != null) {
-                Order order = new Order(course, 1);
-                orders.add(order);
+            if (id != null) {
+                Course course = dao.getCourseById(id);
+                Order o = new Order(course, 1);
+                orders.add(o);
                 cart.removeCourseToCart(course);
             }
         }

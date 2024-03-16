@@ -97,7 +97,7 @@
         <div id="addCourseModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="addProductForm" action="addproduct" method="get">
+                    <form id="addProductForm" action="add" method="post">
                         <div class="modal-header">						
                             <h4 class="modal-title">Add Product</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -129,7 +129,7 @@
                             </div>
                             <div class="form-group">  
                                 <label>Duration (Months)</label>
-                                <input id="duAdd" name="numberDu" type="number" placeholder="Fill in the number of months" class="form-control" min="0" required> 
+                                <input id="duAdd" name="duration" type="number" placeholder="Fill in the number of months" class="form-control" min="0" required> 
                             </div>                                
                             <div class="form-group">
                                 <label>Category</label>
@@ -188,7 +188,7 @@
                             </div>
                             <div class="form-group">  
                                 <label>Duration (Months)</label>
-                                <input id="duEdit" name="numberDu" type="number" placeholder="Fill in the number of months" class="form-control" min="0" required> 
+                                <input id="duEdit" name="duration" type="number" placeholder="Fill in the number of months" class="form-control" min="0" required> 
                             </div>  
                             <div class="form-group">
                                 <label>Category</label>

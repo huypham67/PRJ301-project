@@ -9,12 +9,34 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Course;
 import dao.DAO;
+import jakarta.servlet.annotation.WebServlet;
 import java.util.List;
 import java.util.Random;
-
+@WebServlet(name="AddProductServlet", urlPatterns={"/add"})
 public class AddProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String image = request.getParameter("image");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
+        int duration_month = Integer.parseInt(request.getParameter("duration"));
+        int cid = Integer.parseInt(request.getParameter("category"));
+        String publicDate = request.getParameter("publicDate")+":00.000";
+        String id = randomId(cid);
+        double discount= (double) Double.parseDouble(request.getParameter("discount"))/100;
+        try{
+            DAO dao = DAO.getInstance();
+            Course course = new Course(id, name, image, description, price, duration_month, cid, publicDate, discount);
+            dao.addCourse(course);
+        } catch(Exception e){
+            System.out.println(e);
+        }
+        response.sendRedirect("manager");
+    } 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String name = request.getParameter("name");
         String image = request.getParameter("image");
@@ -33,10 +55,6 @@ public class AddProductServlet extends HttpServlet {
             System.out.println(e);
         }
         response.sendRedirect("manager");
-    } 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
     }
     
     public String randomId(int cid) {
@@ -83,9 +101,5 @@ public class AddProductServlet extends HttpServlet {
         }
         return true;
     }
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

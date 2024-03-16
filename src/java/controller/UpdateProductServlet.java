@@ -6,15 +6,12 @@ import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Course;
-
-/**
- *
- * @author Administrator
- */
+@WebServlet(name="UpdateProductServlet", urlPatterns={"/update"})
 public class UpdateProductServlet extends HttpServlet {
    
     /** 
@@ -40,15 +37,6 @@ public class UpdateProductServlet extends HttpServlet {
             out.println("</html>");
         }
     } 
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -63,8 +51,7 @@ public class UpdateProductServlet extends HttpServlet {
         String image = request.getParameter("image");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
-//        String duration = request.getParameter("numberDu") +" "+request.getParameter("selectDu");
-        int duration_month = 1;
+        int duration_month = Integer.parseInt(request.getParameter("duration"));
         int cid = Integer.parseInt(request.getParameter("category"));
         String publicDate = request.getParameter("publicDate")+":00.000";
         double discount= (double) Double.parseDouble(request.getParameter("discount"))/100;
@@ -77,20 +64,4 @@ public class UpdateProductServlet extends HttpServlet {
         }
         response.sendRedirect("manager");
     }
-    
-    public boolean isValidUrl(String url) {
-        String imageUrlRegex = ".*\\.(jpg|jpeg|png|gif|bmp)$";       
-        Pattern pattern = Pattern.compile(imageUrlRegex);
-        Matcher matcher = pattern.matcher(url);
-        return matcher.matches();
-    }
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
