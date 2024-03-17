@@ -38,7 +38,7 @@ public class SignupServlet extends HttpServlet {
             String pass = request.getParameter("password");
             String cf_pass = request.getParameter("confirm-password");
             if (!pass.equals(cf_pass)) {
-                response.sendRedirect("login.jsp");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Password and cf-password is not equal.");
             } else {
                 String fullName = request.getParameter("fullName");
                 String address = request.getParameter("address");
@@ -47,9 +47,8 @@ public class SignupServlet extends HttpServlet {
                 response.sendRedirect("home");
             }
         }
-        else {
-            request.setAttribute("mes", "Email is existed.");
-            response.sendRedirect("login.jsp");
+        else { //email đã tồn tại hoặc syntax không hợp lệ
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email is invalid or existed.");
         }
 
     }

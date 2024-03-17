@@ -269,7 +269,7 @@ public class DAO extends DBContext implements Serializable {
             ps.setString(4, email);
             ps.setString(5, pass);
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
     }
@@ -500,6 +500,9 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public boolean checkExistedEmail(String email) {
+        String validEmail = "@gmail.com";
+        if (!email.endsWith(validEmail))
+            return true; //xem như email ko hợp lệ
         String sql = "SELECT * FROM Users WHERE email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
