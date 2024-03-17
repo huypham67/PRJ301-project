@@ -3,6 +3,7 @@
 <%@ page import="model.Course" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="includes/language.jsp" %>
+<%@include file="includes/homeButton.jsp"%>
 <fmt:setBundle basename="i18n.language" var="langSet"/>
 <!DOCTYPE html>
 <html>

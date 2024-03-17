@@ -1,11 +1,11 @@
 function updateSelectedCount() {
     var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     var selectedCount = checkboxes.length;
-    document.getElementById("deleteSelectedBtn").innerText = "Delete Selected (" + selectedCount + ")";
-    document.getElementById("buySelectedBtn").innerText = "Buy Selected (" + selectedCount + ")";
+    document.getElementById("count").innerText = "(" + selectedCount + ")";
+    document.getElementById("count1").innerText = "(" + selectedCount + ")";
 }
 
-function buySelected() {
+function buySelected(mes) {
     var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     var selectedIds = [];
 
@@ -18,7 +18,7 @@ function buySelected() {
         return;
     }
 
-    showConfirmationPopup("Are you sure you want to buy the selected items?", function() {
+    showConfirmationPopup(mes, function() {
         var selectedIdsString = selectedIds.join(",");
 
         var xhttp = new XMLHttpRequest();
@@ -38,7 +38,7 @@ function buySelected() {
 }
 
 
-function removeSelected() {
+function removeSelected(mes) {
     var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     var selectedCount = checkboxes.length;
 
@@ -47,7 +47,7 @@ function removeSelected() {
         return;
     }
 
-    showConfirmationPopup("Are you sure you want to delete the selected items?", function() {
+    showConfirmationPopup(mes, function() {
         var ids = [];         
         checkboxes.forEach(function (checkbox) {
             ids.push(checkbox.value);
