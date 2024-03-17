@@ -79,22 +79,22 @@
                                     </form>
                                     <form id="register-form" action="sign-up" method="post" role="form" style="display: none;">
                                         <div class="form-group">
-                                            <input type="text" name="fullName" id="fullName" tabindex="1" class="form-control" placeholder="Full Name" value="">
+                                            <input type="text" name="fullName" id="fullName" tabindex="1" class="form-control" placeholder="Full Name" value="" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="address" id="address" tabindex="1" class="form-control" placeholder="Address" value="">
+                                            <input type="text" name="address" id="address" tabindex="1" class="form-control" placeholder="Address" value="" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="phoneNumber" id="phoneNumber" tabindex="1" class="form-control" placeholder="Phone number" value="">
+                                            <input type="text" name="phoneNumber" id="phoneNumber" tabindex="1" class="form-control" placeholder="Phone number" value="" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="">
+                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+                                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password" required>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
@@ -114,6 +114,6 @@
         <div class="text-center">
             <a href="loginVie.jsp?lang=vi">Vietnamese (Tiếng Việt)</a>
         </div>
-                            
+
     </body>
 </html>

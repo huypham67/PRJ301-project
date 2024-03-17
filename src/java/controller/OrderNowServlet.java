@@ -43,7 +43,7 @@ public class OrderNowServlet extends HttpServlet {
         int quantity = Integer.parseInt(quantityS);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-        if (user != null) {
+//        if (user != null) {
             Course course = dao.getCourseById(id);
             List<Order> orders = new ArrayList<>();
             Order o = new Order(course, quantity);
@@ -60,9 +60,9 @@ public class OrderNowServlet extends HttpServlet {
             response.addCookie(sizeC);
 
             response.sendRedirect("orders");
-        } else {
-            response.sendRedirect("login.jsp");
-        }
+//        } else {
+//            response.sendRedirect("login.jsp");
+//        }
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -22,13 +22,6 @@ public class ActiveCourseServlet extends HttpServlet {
         String id = request.getParameter("id");
         String activationCode = request.getParameter("key");
         
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-        if (user == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in.");
-            return;
-        }
-        
         if (activationCode != null && !activationCode.isEmpty()) {
             Order o = dao.getOrderByActivationCode(activationCode);
             if (o != null) {
