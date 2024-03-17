@@ -305,7 +305,7 @@ public class DAO extends DBContext implements Serializable {
     }
 
     public void deleteCourseById(String id) {
-        String sql = "DELETE Courses where id = ?";
+        String sql = "DELETE FROM Courses where id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, id);
@@ -432,7 +432,7 @@ public class DAO extends DBContext implements Serializable {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int length = 0;
         if (key.equals("transaction")) {
-            length = 10;
+            length = 6;
         }
         if (key.equals("activation")) {
             length = 8;

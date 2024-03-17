@@ -39,8 +39,9 @@
                                 </c:if>
                             </c:forEach>
                         </td>
-                        <td>${o.key.discount}</td>
-                        <td><fmt:formatNumber pattern="#.##" value="${o.key.price * o.value}"/></td>
+                        
+                        <td><fmt:formatNumber value="${o.key.discount*100}" pattern="#" />%</td>
+                        <td><fmt:formatNumber pattern="#.##" value="${o.key.price * o.value * (1-o.key.discount)}"/></td>
                         <td><a href="remove-from-cart?id=${o.key.id}" class="btn btn-sm btn-danger">Remove</a></td>
                     </tr>
                 </c:forEach>

@@ -50,8 +50,8 @@
                                             </c:forEach>
                                         </select>
                                     </td>
-                                    <td>${course.discount}</td>
-                                    <td>${course.price}</td>
+                                    <td><fmt:formatNumber value="${course.discount*100}" pattern="#" />%</td>
+                                    <td>${course.price*(1-course.discount)}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>
