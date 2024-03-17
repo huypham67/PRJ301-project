@@ -18,15 +18,41 @@
                     $(this).addClass('active');
                     e.preventDefault();
                 });
+                
                 $('#register-form-link').click(function (e) {
                     $("#register-form").delay(100).fadeIn(100);
                     $("#login-form").fadeOut(100);
                     $('#login-form-link').removeClass('active');
                     $(this).addClass('active');
-                    e.preventDefault();
+                    e.preventDefault();                  
                 });
-
-            });
+                
+                $(function () {
+                    $('#register-submit').click(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'sign-up',
+                            data: $('#register-form').serialize(),
+                            success: function (response) {
+                                window.location.href = "home";
+                            },
+                            error: function (xhr) {
+                                if (xhr.status == 400) {
+                                    var errorMessage = xhr.responseText;
+                                    var startIndex = errorMessage.indexOf("Message") + "Message".length;
+                                    var endIndex = errorMessage.indexOf("</p>", startIndex);
+                                    var errorMessageContent = errorMessage.substring(startIndex, endIndex);
+                                    var errorMessageText = errorMessageContent.replace(/<[^>]+>/g, '');
+                                    alert("An error occurred: " + errorMessageText); 
+                                } else {
+                                    alert("An error occurred while processing the activation. Please try again later.");
+                                }
+                            }
+                        });
+                    });
+                });         
+            });    
         </script>
     </head>
     <body>
@@ -113,7 +139,6 @@
         </div>
         <div class="text-center">
             <a href="loginVie.jsp?lang=vi">Vietnamese (Tiếng Việt)</a>
-        </div>
-
+        </div>                                   
     </body>
 </html>
