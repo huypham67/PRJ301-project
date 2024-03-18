@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
         User acc = dao.login(email, password);
         if (acc == null) {
             request.setAttribute("mes", mes);
-            request.getRequestDispatcher("home.jsp").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         } else {
             session.setAttribute("acc", acc);
             response.sendRedirect("home");
