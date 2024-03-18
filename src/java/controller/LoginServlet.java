@@ -1,9 +1,7 @@
 package controller;
 
 import dao.DAO;
-import i18n.LanguageManager;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,9 +18,11 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String mes;
         String lang = (String) session.getAttribute("language");
-        if (lang.equals("en_US")){
+        if (null == lang || lang.equals("en_US")){
+            session.setAttribute("language", "en_US");
             mes = "Wrong email or password!";
         } else {
+            session.setAttribute("language", "vi_VN");
             mes = "Sai email hoặc là mật khẩu!";
         }
 

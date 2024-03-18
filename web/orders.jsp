@@ -29,6 +29,7 @@
                         <th scope="col">Quantity</th>
                         <th scope="col">Discount</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Key</th>
                         <th scope="col">Cancel</th>
                     </tr>
                 </thead>
@@ -41,8 +42,9 @@
                                 <td>${o.course.name}</td>
                                 <td>${o.course.cname}</td>
                                 <td>${o.quantity}</td>
-                                <td>${o.course.discount}</td>
-                                <td>${o.course.price*o.quantity}</td>
+                                <td>${o.course.discount}</td>                               
+                                <td>$${o.course.price*o.quantity}</td>
+                                <td>${o.activationCode}</td>
                                 <td><a class="btn btn-sm btn-danger" href="cancel-order?tid=${t.transactionId}&pid=${o.course.id}">Cancel Order</a></td>
                             </tr>
                         </c:forEach>

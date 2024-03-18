@@ -17,12 +17,12 @@ function updateOrderSummary() {
         var newRow = document.createElement('tr');
         newRow.innerHTML = '<td>' + id + '</td>' +
                            '<td>' + quantity + '</td>' +
-                           '<td>' + discount.toFixed(2) + '</td>' +
-                           '<td>' + subtotal.toFixed(2) + '</td>';
+                           '<td>' + discount + '%</td>' +
+                           '<td>$' + subtotal.toFixed(2) + '</td>';
         orderSummaryBody.appendChild(newRow);
     });
 
-    document.getElementById("totalPriceCell").innerText = total.toFixed(2);
+    document.getElementById("totalPriceCell").innerText = "$"+ total.toFixed(2);
 }
 
 

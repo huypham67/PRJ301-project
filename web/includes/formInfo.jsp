@@ -46,29 +46,34 @@
         margin-bottom: 5px;
     }
 </style>
-
+<head>
+    <%@include file="language.jsp" %>
+</head>
+<body>
 <div style="padding-top: 100px">
     <form id="checkoutForm" action="cart-check-out" method="post"> 
         <div>						
-            <h4>Your information</h4>
+            <h4><fmt:message key="form.information" bundle="${langSet}" /></h4>
         </div>
         <div>
             <div class="form-group">
-                <label for="name">Full Name:</label>
+                <label for="name"><fmt:message key="form.fullname" bundle="${langSet}" /></label>
                 <input value="${sessionScope.acc.fullName}" type="text" id="name" name="name" placeholder="Enter your full name">
             </div>
             <div class="form-group">
-                <label for="phone">Phone Number:</label>
+                <label for="phone"><fmt:message key="form.phone" bundle="${langSet}" /></label>
                 <input value="${sessionScope.acc.phoneNumber}" type="text" id="phone" name="phone" placeholder="Enter your phone number">
             </div>
             <div class="form-group">
-                <label for="address">Address:</label>
+                <label for="address"><fmt:message key="form.address" bundle="${langSet}" /></label>
                 <input value="${sessionScope.acc.address}" type="text" id="address" name="address" placeholder="Enter your address">
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email"><fmt:message key="form.email" bundle="${langSet}" /></label>
                 <input value="${sessionScope.acc.email}" type="email" id="email" name="email" placeholder="Enter your email address">
             </div>
         </div>
     </form>
 </div>
+
+</body>

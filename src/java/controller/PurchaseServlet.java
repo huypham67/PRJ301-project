@@ -34,14 +34,14 @@ public class PurchaseServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No courses selected for purchase.");
             return;
         }
-
         // Retrieve user and cart information from session and cookies
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
-//        if (user == null) {
-//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in.");
-//            return;
-//        }
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in.");
+            return;
+        }
+
 
         Cart cart = new Cart();
         Cookie[] cookies = request.getCookies();
