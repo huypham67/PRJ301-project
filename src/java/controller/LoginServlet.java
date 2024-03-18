@@ -17,26 +17,15 @@ public class LoginServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        LanguageManager lang = new LanguageManager();
-        String langParam = null;
-        String previousURL = request.getHeader("referer");
-        if (previousURL != null) {
-            int langIndex = previousURL.lastIndexOf("?lang=");
-            if (langIndex != -1) {
-                langParam = previousURL.substring(langIndex + 6);
-            }
+        HttpSession session = request.getSession();
+        String mes;
+        String lang = (String) session.getAttribute("language");
+        if (lang.equals("en_US")){
+            mes = "Wrong email or password!";
+        } else {
+            mes = "Sai email hoặc là mật khẩu!";
         }
 
-        String jspFile, mes;
-        if ("vi".equals(langParam)) {
-            lang.setLanguage(request, "vi_VN");
-            jspFile = "loginVie.jsp";
-            mes = "Sai email hoặc mật khẩu";
-        } else {
-            lang.setLanguage(request, "en_US");
-            jspFile = "login.jsp";
-            mes = "Email or password is wrong";
-        }
         response.setContentType("text/html;charset=UTF-8");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -44,9 +33,8 @@ public class LoginServlet extends HttpServlet {
         User acc = dao.login(email, password);
         if (acc == null) {
             request.setAttribute("mes", mes);
-            request.getRequestDispatcher(jspFile).forward(request, response);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
         } else {
-            HttpSession session = request.getSession();
             session.setAttribute("acc", acc);
             response.sendRedirect("home");
         }
