@@ -16,13 +16,21 @@ public class ManagerProductServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String indexS = request.getParameter("index");
+        if (indexS == null)
+            indexS = "1";
+        int index = Integer.parseInt(indexS);
         DAO dao = DAO.getInstance();
-        List<Course> listP = dao.getAllCourses();
-        List<Category> listC = dao.getAllCategories();
-        Course lastP = dao.getLastestCourse();
+        int count = dao.getTotalCourse(); //đếm số khóa học đang có
+        int endPage = count/4;
+        if (count%4 != 0)
+            endPage++;
+        //in ra các khóa của trang "index"
+        List<Course> listP = dao.pagingCourses(index);
         request.setAttribute("listP", listP);
-        request.setAttribute("listC", listC);
-        request.setAttribute("lastP", lastP);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("count", count);
+        request.setAttribute("index", index);
         request.getRequestDispatcher("managerProduct.jsp").forward(request, response);
     } 
     @Override

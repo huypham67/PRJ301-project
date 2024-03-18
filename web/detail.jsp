@@ -78,7 +78,7 @@
                                         </dl>
 
                                         <hr>
-                                        <div class="row">
+<!--                                        <div class="row">
                                             <div class="col-sm-5">
                                                 <dl class="param param-inline">
                                                     <dt>Quantity: </dt>
@@ -91,12 +91,12 @@
                                                             <option> 5 </option>
                                                         </select>
                                                     </dd>
-                                                </dl>  <!-- item-property .// -->
-                                            </div> <!-- col.// -->
+                                                </dl>   item-property .// 
+                                            </div>  col.// 
 
-                                        </div> <!-- row.// -->
+                                        </div>  row.// -->
                                         <hr>
-                                        <a id="buy-now" href="order-now?id=${c.id}&quantity=1" class="btn btn-lg btn-primary text-uppercase"> Buy now </a>
+                                        <a id="buy-now" href="buynow?id=${c.id}&quantity=1" class="btn btn-lg btn-primary text-uppercase"> Buy now </a>
                                         <a id="add-to-cart" href="add-to-cart?id=${c.id}&quantity=1" class="btn btn-lg btn-outline-primary text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a>
                                     </article> <!-- card-body.// -->
                                 </aside> <!-- col.// -->

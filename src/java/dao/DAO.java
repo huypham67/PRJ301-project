@@ -68,6 +68,35 @@ public class DAO extends DBContext implements Serializable {
         return list;
     }
 
+    public List<Course> pagingCourses(int index) {
+        List<Course> list = new ArrayList<>();
+        String sql = "SELECT *\n"
+                + "FROM Courses\n"
+                + "ORDER BY id \n"
+                + "OFFSET ? ROWS\n"
+                + "FETCH NEXT 4 ROWS ONLY;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, 4*(index-1));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Course c = new Course(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getInt(7),
+                        rs.getString(8),
+                        rs.getDouble(9));
+                list.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
     public List<Course> getCoursesByCid(String cid) {
         List<Course> list = new ArrayList<>();
         String sql = "select * from Courses where cid = ?";
@@ -446,7 +475,6 @@ public class DAO extends DBContext implements Serializable {
         return sb.toString();
     }
 
-
     public void updateExpirationDay(String activationCode) {
         String sql = "UPDATE Orders\n"
                 + "SET endDate = DATEADD(MONTH, c.duration_month, getdate())\n"
@@ -494,6 +522,7 @@ public class DAO extends DBContext implements Serializable {
             System.out.println(e);
         }
     }
+
     public static void main(String[] args) {
         DAO dao = DAO.getInstance();
         dao.cancelOrder("MD102", "7HFquVZstt");
@@ -501,19 +530,35 @@ public class DAO extends DBContext implements Serializable {
 
     public boolean checkExistedEmail(String email) {
         String validEmail = "@gmail.com";
-        if (!email.endsWith(validEmail))
+        if (!email.endsWith(validEmail)) {
             return true; //xem như email ko hợp lệ
+        }
         String sql = "SELECT * FROM Users WHERE email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            if (rs.next())
+            if (rs.next()) {
                 return true; //đã tồn tại
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
         return false;
+    }
+
+    public int getTotalCourse() {
+        String sql = "select count(*) from Courses";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
     }
 
 }

@@ -82,13 +82,11 @@
                     </tbody>                    
                 </table>            
                 <div class="clearfix">
-                    <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                    <div class="hint-text">Showing <b>4</b> out of <b>${count}</b> entries</div>
                     <ul class="pagination">
-                        <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                        <li class="page-item"><a href="#" class="page-link">2</a></li>
-                        <li class="page-item"><a href="#" class="page-link">3</a></li>
-                        <li class="page-item"><a href="#" class="page-link">4</a></li>
-                        <li class="page-item"><a href="#" class="page-link">5</a></li>
+                        <c:forEach begin="1" end="${endPage}" var="i">
+                            <li class="page-item ${index == i ? "active" : ""}"><a href="manager?index=${i}" class="page-link">${i}</a></li>
+                        </c:forEach>
                     </ul>
                 </div>
             </div>
@@ -250,7 +248,7 @@
             </div>
         </div>
         
-        <script src="js/manager.js" type="text/javascript"></script>
+        <script src="script/manager.js" type="text/javascript"></script>
         <script>
                 
 //            document.getElementById("deleteButton").addEventListener("click", function() {
